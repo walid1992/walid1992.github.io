@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title><![CDATA[weex]]></title>
+      <title><![CDATA[Weex基于Vue2.0开发框架搭建]]></title>
       <url>https://walid1992.github.io/2017/05/09/Weex%E5%9F%BA%E4%BA%8EVue2.0%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA/</url>
       <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/2843033-43093e0a1cfdd5ce?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Weex基于Vue2.0开发框架搭建"></p>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近有一些人反馈说在面试过程中常常被问到weex相关的知识，也侧面反映的weex的发展还是很可观的，可是目前weex的开发者大多数是中小型公司或者个人，大公司屈指可数，揪其原因可能是基于weex的开发正确的姿势大家并没有找到，而且市面上的好多轮子还是.we后缀的，众所周知，weex和vue一直在努力的进行生态互通，而且weex实现web标准化是早晚的问题，今天和大家分享一下weex基于vue2.0的开发框架模板~</p>
