@@ -1,0 +1,771 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RxJava," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="网络请求在项目开发中必不可少，封装的好坏很大程度上影响的项目质量，本篇博文 [草民-walid](http://www.jianshu.com/users/a279a2f8ed63/latest_articles) 与大家分享一下本人的愚见与rxretrofit框架讲解~">
+<meta name="keywords" content="RxJava">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RxRetrofit 网络框架解析">
+<meta property="og:url" content="https://walid1992.github.io/2016/10/24/RxRetrofit 网络框架解析/index.html">
+<meta property="og:site_name" content="Walid&#39;s Blog">
+<meta property="og:description" content="网络请求在项目开发中必不可少，封装的好坏很大程度上影响的项目质量，本篇博文 [草民-walid](http://www.jianshu.com/users/a279a2f8ed63/latest_articles) 与大家分享一下本人的愚见与rxretrofit框架讲解~">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-39f3c6fab45ae489?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-10a099b3c447d4a0?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-04-10T12:42:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RxRetrofit 网络框架解析">
+<meta name="twitter:description" content="网络请求在项目开发中必不可少，封装的好坏很大程度上影响的项目质量，本篇博文 [草民-walid](http://www.jianshu.com/users/a279a2f8ed63/latest_articles) 与大家分享一下本人的愚见与rxretrofit框架讲解~">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2843033-39f3c6fab45ae489?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://walid1992.github.io/2016/10/24/RxRetrofit 网络框架解析/"/>
+
+
+
+
+
+  <title>RxRetrofit 网络框架解析 | Walid's Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Walid's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Luck oriented programming</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://walid1992.github.io/2016/10/24/RxRetrofit 网络框架解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="walid">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/7/A/C/1_walid1992.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Walid's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RxRetrofit 网络框架解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-24T22:30:30+08:00">
+                2016-10-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  网络请求在项目开发中必不可少，封装的好坏很大程度上影响的项目质量，本篇博文 [草民-walid](http://www.jianshu.com/users/a279a2f8ed63/latest_articles) 与大家分享一下本人的愚见与rxretrofit框架讲解~
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://upload-images.jianshu.io/upload_images/2843033-39f3c6fab45ae489?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="RxRetrofit"></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>网络请求在项目开发中必不可少，封装的好坏很大程度上影响的项目质量，本篇博文 <a href="http://www.jianshu.com/users/a279a2f8ed63/latest_articles" target="_blank" rel="external">草民-walid</a> 与大家分享一下本人的愚见与rxretrofit框架讲解~</p>
+<h1 id="劣质请求框架的表现"><a href="#劣质请求框架的表现" class="headerlink" title="劣质请求框架的表现"></a>劣质请求框架的表现</h1><p>1.与业务逻辑严重耦合<br>2.存在很多复杂冗余代码<br>3.写法不够傻瓜<br>4.请求统一处理不佳<br>  …</p>
+<h1 id="rxretrofit-框架介绍"><a href="#rxretrofit-框架介绍" class="headerlink" title="rxretrofit 框架介绍"></a>rxretrofit 框架介绍</h1><h2 id="技术概要"><a href="#技术概要" class="headerlink" title="技术概要"></a>技术概要</h2><p>rxretrofit库采用了rxjava + retrofit 2.0 进行整合封装， <a href="http://www.jianshu.com/p/9d1d58e170f4" target="_blank" rel="external">retrofit2.0</a> 与 <a href="http://www.jianshu.com/p/e3c4280ce397" target="_blank" rel="external">rxjava</a> 在之前文章中都有所介绍，相信大家也都会有所了解，rxjava 与 retrofit的思想就不和大家进行过多的解读了，长话短说，我们开始吧~</p>
+<h2 id="依赖module"><a href="#依赖module" class="headerlink" title="依赖module"></a>依赖module</h2><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">dependencies</span> &#123;</div><div class="line">    <span class="comment">// ... 省略部分依赖</span></div><div class="line">    <span class="comment">// rxjava 相关库</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'io.reactivex:rxandroid:1.2.1'</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'io.reactivex:rxjava:1.1.10'</span></div><div class="line">    <span class="comment">//retrofit 相关库</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.okhttp3:logging-interceptor:3.4.1'</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:retrofit:2.1.0'</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:converter-gson:2.1.0'</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.squareup.retrofit2:adapter-rxjava:2.1.0'</span></div><div class="line">    <span class="keyword">compile</span> <span class="string">'com.google.code.gson:gson:2.7'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p><img src="http://upload-images.jianshu.io/upload_images/2843033-10a099b3c447d4a0?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Rxretrofit 框架目录结构"></p>
+<p><strong>简单介绍下文件的作用，这里没有优先级，直接从上至下 ：</strong></p>
+<ol>
+<li>RetrofitParams ：<br>配置参数，包括超时时间、转换器、拦截器等</li>
+<li>ExceptionCode ：<br>http异常代码</li>
+<li>ServerResultException：<br>自定义server异常</li>
+<li>ICodeVerify :<br>codehi合法校验接口，用于服务器code异常校验</li>
+<li>IHttpCallback :<br>rxjava 订阅callback</li>
+<li>IHttpCancelListener :<br>http 请求取消接口</li>
+<li>IHttpResult :<br>http数据返回接口，统一规范</li>
+<li>SimpleHttpCallback :<br>IHttpResult的实现类</li>
+<li>RxRetrogitLog :<br>log 日志工具类</li>
+<li>HttpManager :<br>http网络请求管理</li>
+<li>HttpSubscriber :<br>http 订阅处理</li>
+</ol>
+<p>根据目录结构大家对项目应该有了一个整体的认识。</p>
+<h2 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h2><p>库中的代码整体比较简单，草民这里挑出两个重要的类来进行介绍吧~</p>
+<h3 id="HttpManager"><a href="#HttpManager" class="headerlink" title="HttpManager"></a>HttpManager</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Author   : walid</div><div class="line"> * Data     : 2016-08-18  15:58</div><div class="line"> * Describe : http 管理类</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HttpManager</span> &#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Retrofit retrofit;</div><div class="line">    <span class="keyword">private</span> ICodeVerify codeVerify;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">HttpManager</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        RxJavaPlugins.getInstance().registerErrorHandler(<span class="keyword">new</span> RxJavaErrorHandler() &#123;</div><div class="line">            @<span class="function">Override</span></div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleError</span>(<span class="params">Throwable e</span>) &#123;</div><div class="line">                RxRetrogitLog.e(<span class="string">"RxJavaPlugins Error = "</span> + e);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> HttpManager <span class="title">getInstance</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> HttpManager.SingletonHolder.instance;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">SingletonHolder</span> &#123;</div><div class="line">        <span class="keyword">static</span> HttpManager instance = <span class="keyword">new</span> HttpManager();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">create</span>(<span class="params">String baseUrl, ICodeVerify codeVerify, RetrofitParams <span class="keyword">params</span></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.codeVerify = codeVerify;</div><div class="line">        Converter.Factory converterFactory = <span class="keyword">params</span>.getConverterFactory();</div><div class="line">        CallAdapter.Factory callAdapterFactory = <span class="keyword">params</span>.getCallAdapterFactor();</div><div class="line">        retrofit = <span class="keyword">new</span> Retrofit.Builder().baseUrl(baseUrl)</div><div class="line">                .addConverterFactory(converterFactory != <span class="literal">null</span> ? converterFactory : GsonConverterFactory.create(<span class="keyword">new</span> GsonBuilder().create()))</div><div class="line">                .addCallAdapterFactory(callAdapterFactory != <span class="literal">null</span> ? callAdapterFactory : RxJavaCallAdapterFactory.create())</div><div class="line">                .client(createClient(<span class="keyword">params</span>))</div><div class="line">                .build();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> OkHttpClient <span class="title">createClient</span>(<span class="params">RetrofitParams <span class="keyword">params</span></span>) </span>&#123;</div><div class="line">        OkHttpClient.Builder builder = <span class="keyword">new</span> OkHttpClient.Builder();</div><div class="line"></div><div class="line">        <span class="comment">// 设置超时</span></div><div class="line">        <span class="keyword">int</span> connectTimeoutSeconds = <span class="keyword">params</span>.getConnectTimeoutSeconds();</div><div class="line">        <span class="keyword">if</span> (connectTimeoutSeconds &gt; <span class="number">0</span>) &#123;</div><div class="line">            builder.connectTimeout(connectTimeoutSeconds, TimeUnit.SECONDS);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> readTimeoutSeconds = <span class="keyword">params</span>.getReadTimeoutSeconds();</div><div class="line">        <span class="keyword">if</span> (readTimeoutSeconds &gt; <span class="number">0</span>) &#123;</div><div class="line">            builder.readTimeout(readTimeoutSeconds, TimeUnit.SECONDS);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">int</span> writeTimeoutSeconds = <span class="keyword">params</span>.getWriteTimeoutSeconds();</div><div class="line">        <span class="keyword">if</span> (writeTimeoutSeconds &gt; <span class="number">0</span>) &#123;</div><div class="line">            builder.writeTimeout(writeTimeoutSeconds, TimeUnit.SECONDS);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Log信息拦截器</span></div><div class="line">        builder.addInterceptor(<span class="keyword">new</span> HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));</div><div class="line"></div><div class="line">        ArrayList&lt;Interceptor&gt; interceptors = <span class="keyword">params</span>.getInterceptors();</div><div class="line">        <span class="keyword">if</span> (interceptors != <span class="literal">null</span> &amp;&amp; interceptors.size() &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">for</span> (Interceptor interceptor : interceptors) &#123;</div><div class="line">                builder.addInterceptor(interceptor);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> builder.build();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> &lt;ApiType&gt; <span class="function">ApiType <span class="title">getApiService</span>(<span class="params">Class&lt;ApiType&gt; type</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> retrofit.create(type);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> &lt;T, Result extends IHttpResult&lt;T&gt;&gt; <span class="function">HttpSubscriber&lt;T&gt; <span class="title">toSubscribe</span>(<span class="params">Observable&lt;Result&gt; observable, Context context, IHttpCallback&lt;T&gt; listener</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> toSubscribe(observable, <span class="keyword">new</span> HttpSubscriber&lt;&gt;(context, listener));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> &lt;T, Result extends IHttpResult&lt;T&gt;&gt; <span class="function">HttpSubscriber&lt;T&gt; <span class="title">toSubscribe</span>(<span class="params">Observable&lt;Result&gt; observable, Context context, IHttpCallback&lt;T&gt; listener, boolean isShowToast</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> toSubscribe(observable, <span class="keyword">new</span> HttpSubscriber&lt;&gt;(context, listener, isShowToast));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> &lt;T, Result extends IHttpResult&lt;T&gt;&gt; <span class="function">HttpSubscriber&lt;T&gt; <span class="title">toSubscribe</span>(<span class="params">Observable&lt;Result&gt; observable, HttpSubscriber&lt;T&gt; httpSubscriber</span>) </span>&#123;</div><div class="line">        Observable&lt;T&gt; observableNew = observable.map(<span class="keyword">new</span> Func1&lt;Result, T&gt;() &#123;</div><div class="line">            @<span class="function">Override</span></div><div class="line">            <span class="keyword">public</span> T <span class="title">call</span>(<span class="params">Result result</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (result == <span class="literal">null</span>) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"数据为空~"</span>);</div><div class="line">                &#125;</div><div class="line">                RxRetrogitLog.d(result.toString());</div><div class="line">                <span class="keyword">int</span> code = result.getCode();</div><div class="line">                <span class="keyword">if</span> (!codeVerify.checkValid(result.getCode())) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> ServerResultException(code, codeVerify.formatCodeMessage(code, result.getMsg()));</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">return</span> result.getData();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        observableNew.subscribeOn(Schedulers.io())</div><div class="line">                .unsubscribeOn(Schedulers.io())</div><div class="line">                .observeOn(AndroidSchedulers.mainThread())</div><div class="line">                .subscribe(httpSubscriber);</div><div class="line">        <span class="keyword">return</span> httpSubscriber;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>重要处理：</p>
+<ol>
+<li>create<br>rxretrofit库的初始化，建议在Application中进行初始化，通过参数可以清晰的得知，传入了baseurl、code校验与params，从而设置OkHttpClient。</li>
+<li>getApiService<br>获取api的实例对象。</li>
+<li>toSubscribe<br>订阅网络请求，调用此方法进行网络请求，在网络请求发起时创建了HttpSubscriber对象，进行rxjava的事件订阅，进行统一处理。</li>
+</ol>
+<h3 id="HttpSubscriber"><a href="#HttpSubscriber" class="headerlink" title="HttpSubscriber"></a>HttpSubscriber</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Author   : walid</div><div class="line"> * Data     : 2016-08-18  15:59</div><div class="line"> * Describe : http 观察者(订阅者)</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HttpSubscriber</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Subscriber</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">IHttpCancelListener</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"HttpSubscriber"</span>;</div><div class="line"></div><div class="line">    <span class="comment">//对应HTTP的状态码</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNAUTHORIZED = <span class="number">401</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> FORBIDDEN = <span class="number">403</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> NOT_FOUND = <span class="number">404</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> REQUEST_TIMEOUT = <span class="number">408</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INTERNAL_SERVER_ERROR = <span class="number">500</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> BAD_GATEWAY = <span class="number">502</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SERVICE_UNAVAILABLE = <span class="number">503</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> GATEWAY_TIMEOUT = <span class="number">504</span>;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Context context;</div><div class="line">    <span class="keyword">private</span> IHttpCallback&lt;T&gt; httpCallback;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> showError;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HttpSubscriber</span><span class="params">(Context context, IHttpCallback&lt;T&gt; httpCallback)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>(context, httpCallback, <span class="keyword">true</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HttpSubscriber</span><span class="params">(Context context, IHttpCallback&lt;T&gt; httpCallback, <span class="keyword">boolean</span> showError)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.context = context;</div><div class="line">        <span class="keyword">this</span>.httpCallback = httpCallback;</div><div class="line">        <span class="keyword">this</span>.showError = showError;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 订阅开始时调用</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 加载成功</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</div><div class="line">        Log.d(TAG, <span class="string">"onCompleted"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 对错误进行统一处理</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable e)</span> </span>&#123;</div><div class="line"></div><div class="line">        Throwable throwable = e;</div><div class="line">        <span class="comment">//获取最根源的异常</span></div><div class="line">        <span class="keyword">while</span> (throwable.getCause() != <span class="keyword">null</span>) &#123;</div><div class="line">            e = throwable;</div><div class="line">            throwable = throwable.getCause();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//HTTP错误</span></div><div class="line">        <span class="keyword">if</span> (e <span class="keyword">instanceof</span> HttpException) &#123;</div><div class="line">            HttpException httpException = (HttpException) e;</div><div class="line">            <span class="keyword">switch</span> (httpException.code()) &#123;</div><div class="line">                <span class="comment">//权限错误，需要实现</span></div><div class="line">                <span class="keyword">case</span> UNAUTHORIZED:</div><div class="line">                <span class="keyword">case</span> FORBIDDEN:</div><div class="line">                    callError(ExceptionCode.PERMISSION_ERROR, <span class="string">"权限错误~"</span>);</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                <span class="comment">//均视为网络错误</span></div><div class="line">                <span class="keyword">case</span> NOT_FOUND:</div><div class="line">                <span class="keyword">case</span> REQUEST_TIMEOUT:</div><div class="line">                <span class="keyword">case</span> GATEWAY_TIMEOUT:</div><div class="line">                <span class="keyword">case</span> INTERNAL_SERVER_ERROR:</div><div class="line">                <span class="keyword">case</span> BAD_GATEWAY:</div><div class="line">                <span class="keyword">case</span> SERVICE_UNAVAILABLE:</div><div class="line">                <span class="keyword">default</span>:</div><div class="line">                    callError(ExceptionCode.HTTP_EXCEPTION, <span class="string">"网络错误,请检查网络后再试~"</span>);</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (e <span class="keyword">instanceof</span> JsonParseException || e <span class="keyword">instanceof</span> JSONException || e <span class="keyword">instanceof</span> ParseException) &#123;</div><div class="line">            <span class="comment">//均视为解析错误</span></div><div class="line">            callError(ExceptionCode.PARSE_ERROR, <span class="string">"数据解析异常~"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (e <span class="keyword">instanceof</span> SocketTimeoutException) &#123;</div><div class="line">            callError(ExceptionCode.SOCKET_TIMEOUT_EXCEPTION, <span class="string">"网络请求超时~"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (e <span class="keyword">instanceof</span> ServerResultException) &#123;</div><div class="line">            ServerResultException apiException = (ServerResultException) e;</div><div class="line">            callError(apiException.getCode(), apiException.getMessage());</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (e <span class="keyword">instanceof</span> ConnectException) &#123;</div><div class="line">            callError(ExceptionCode.CONNECT_EXCEPTION, <span class="string">"连接服务器失败~"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            callError(ExceptionCode.UNKNOWN_ERROR, <span class="string">"服务器正在开小灶,请稍后再试~"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        RxRetrogitLog.e(e.getMessage());</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">callError</span><span class="params">(<span class="keyword">int</span> code, String message)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (showError) &#123;</div><div class="line">            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (httpCallback != <span class="keyword">null</span>) &#123;</div><div class="line">            httpCallback.onError(code, message);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 将onNext方法中的返回结果交给Activity或Fragment自己处理</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(T t)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (httpCallback == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        httpCallback.onNext(t);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 取消ProgressDialog的时候，取消对observable的订阅，同时也取消了http请求</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.isUnsubscribed()) &#123;</div><div class="line">            <span class="keyword">this</span>.unsubscribe();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>重要处理：</p>
+<ol>
+<li>onNext<br>请求成功回调callback。</li>
+<li>onError<br>请求失败进行统一处理。</li>
+<li>onCancel<br>对网络请求进行取消订阅，可以在activity destroy中进行取消操作。</li>
+</ol>
+<h1 id="rxretrofit-框架使用"><a href="#rxretrofit-框架使用" class="headerlink" title="rxretrofit 框架使用"></a>rxretrofit 框架使用</h1><p>前面说了那么多，有的人要吐槽了，bb这么多没有用的，说了半天我还不知道如何使用呢？xx个逼的，草民只是想让大家不仅仅是一个使用者，更想让大家多多的懂得其中的原理，好吧！代码我介绍的也不够完整，在此做个鬼脸，草民惭愧了，下面和大家分享重头戏，使用篇~</p>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>建议初始化在Application中~</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    public void onCreate() &#123;</div><div class="line">        <span class="keyword">super</span>.onCreate();</div><div class="line">        <span class="comment">// LOG 日志开关</span></div><div class="line">        <span class="type">RxRetrogitLog</span>.<span class="type">DEBUG</span> = <span class="literal">true</span>;</div><div class="line">        <span class="type">RetrofitParams</span> params = <span class="keyword">new</span> <span class="type">RetrofitParams</span>();</div><div class="line">        <span class="comment">// 拦截器设置</span></div><div class="line">        <span class="type">ArrayList</span>&lt;<span class="type">Interceptor</span>&gt; interceptors = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;();</div><div class="line">        interceptors.add(<span class="keyword">new</span> <span class="type">ParamsInterceptor</span>());</div><div class="line">        params.setInterceptors(interceptors);</div><div class="line">        <span class="comment">// data 转换器</span></div><div class="line">        <span class="type">GsonBuilder</span> builder = <span class="keyword">new</span> <span class="type">GsonBuilder</span>().setDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>);</div><div class="line">        params.setConverterFactory(<span class="type">GsonConverterFactory</span>.create(builder.create()));</div><div class="line">        <span class="comment">// 连接超时时间</span></div><div class="line">        params.setConnectTimeoutSeconds(<span class="number">10</span>);</div><div class="line">        <span class="comment">// 读取超时时间</span></div><div class="line">        params.setReadTimeoutSeconds(<span class="number">10</span>);</div><div class="line">        <span class="comment">// 写超时时间</span></div><div class="line">        params.setWriteTimeoutSeconds(<span class="number">10</span>);</div><div class="line">        <span class="comment">// 创建httpClient</span></div><div class="line">        <span class="type">HttpManager</span>.getInstance().create(<span class="type">ApiConstants</span>.<span class="type">URL</span>, <span class="keyword">new</span> <span class="type">SeaCodeVerify</span>(), params);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="api-声明"><a href="#api-声明" class="headerlink" title="api 声明"></a>api 声明</h2><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">public</span> <span class="selector-tag">interface</span> <span class="selector-tag">IInsApi</span> &#123;</div><div class="line">    <span class="comment">// 险种 list</span></div><div class="line">    <span class="variable">@GET</span>(<span class="string">"/api/ins/list"</span>)</div><div class="line">    Observable&lt;HttpResult&lt;List&lt;InsuranceVo&gt;&gt;&gt; list(<span class="variable">@Query</span>(<span class="string">"platform"</span>) String platform);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="请求调用"><a href="#请求调用" class="headerlink" title="请求调用"></a>请求调用</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="type">TextView</span> tvContent;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) &#123;</div><div class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</div><div class="line">        setContentView(<span class="type">R</span>.layout.activity_main);</div><div class="line">        tvContent = (<span class="type">TextView</span>) findViewById(<span class="type">R</span>.id.tv_content);</div><div class="line">        <span class="type">HttpManager</span> httpManager = <span class="type">HttpManager</span>.getInstance();</div><div class="line">        <span class="comment">// 发起请求</span></div><div class="line">        httpManager.toSubscribe(httpManager.getApiService(<span class="type">IInsApi</span>.<span class="keyword">class</span>).list(<span class="string">"ANDROID"</span>), <span class="keyword">this</span>, <span class="keyword">new</span> <span class="type">SimpleHttpCallback</span>&lt;<span class="type">List</span>&lt;<span class="type">InsuranceVo</span>&gt;&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            public void onNext(<span class="type">List</span>&lt;<span class="type">InsuranceVo</span>&gt; insuranceVos) &#123;</div><div class="line">                tvContent.setText(<span class="string">"Datas = \n"</span> + insuranceVos.toString());</div><div class="line">            &#125;</div><div class="line">        &#125;, <span class="literal">true</span>);   </div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>整个框架的使用就这几个最low的步骤，这也仅仅是最low的使用方式，大家也可以参考我提供的demo的使用方式加以封装，毕竟框架封装的好坏是取决于调用是否简单，在傻瓜式代码的路上，草民还在努力，也想和大家一同成长~</p>
+<h2 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h2><p>gitbub ：</p>
+<p> <a href="https://github.com/walid1992/RxRetrofit" target="_blank" rel="external">https://github.com/walid1992/RxRetrofit</a></p>
+<p>gradle  ：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">compile</span> <span class="string">'com.walid:rxretrofit:0.1.0'</span></div></pre></td></tr></table></figure>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>RxRetrofit的使用就简单介绍到这里，希望大家多多提意见，草民好加以完善，谢谢~</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/25/RxJava进阶四（组合类操作符）/" rel="next" title="RxJava进阶四（组合类操作符）">
+                <i class="fa fa-chevron-left"></i> RxJava进阶四（组合类操作符）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/09/Weex基于Vue2.0开发框架搭建/" rel="prev" title="weex">
+                weex <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/7/A/C/1_walid1992.jpg"
+               alt="walid" />
+          <p class="site-author-name" itemprop="name">walid</p>
+           
+              <p class="site-description motion-element" itemprop="description">Walid's Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#劣质请求框架的表现"><span class="nav-number">2.</span> <span class="nav-text">劣质请求框架的表现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rxretrofit-框架介绍"><span class="nav-number">3.</span> <span class="nav-text">rxretrofit 框架介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#技术概要"><span class="nav-number">3.1.</span> <span class="nav-text">技术概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#依赖module"><span class="nav-number">3.2.</span> <span class="nav-text">依赖module</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录结构"><span class="nav-number">3.3.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码解析"><span class="nav-number">3.4.</span> <span class="nav-text">代码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HttpManager"><span class="nav-number">3.4.1.</span> <span class="nav-text">HttpManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HttpSubscriber"><span class="nav-number">3.4.2.</span> <span class="nav-text">HttpSubscriber</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#rxretrofit-框架使用"><span class="nav-number">4.</span> <span class="nav-text">rxretrofit 框架使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化"><span class="nav-number">4.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#api-声明"><span class="nav-number">4.2.</span> <span class="nav-text">api 声明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求调用"><span class="nav-number">4.3.</span> <span class="nav-text">请求调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目地址"><span class="nav-number">4.4.</span> <span class="nav-text">项目地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">walid</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

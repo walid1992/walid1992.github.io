@@ -1,0 +1,815 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="来自[移动支付公司square](https://github.com/square/retrofit)公司的作品，[开源世界top5的最小公司](http://www.csdn.net/article/2014-02-10/2818351-open-source-5-companies-code-projects)，首先我自己是一个忠实广场粉，okhttp、picasso、greendao、ok">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Retrofit 2.0 官方文档">
+<meta property="og:url" content="https://walid1992.github.io/2016/08/25/Retrofit-2-0-官方文档/index.html">
+<meta property="og:site_name" content="Walid&#39;s Blog">
+<meta property="og:description" content="来自[移动支付公司square](https://github.com/square/retrofit)公司的作品，[开源世界top5的最小公司](http://www.csdn.net/article/2014-02-10/2818351-open-source-5-companies-code-projects)，首先我自己是一个忠实广场粉，okhttp、picasso、greendao、ok">
+<meta property="og:updated_time" content="2017-04-10T12:42:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Retrofit 2.0 官方文档">
+<meta name="twitter:description" content="来自[移动支付公司square](https://github.com/square/retrofit)公司的作品，[开源世界top5的最小公司](http://www.csdn.net/article/2014-02-10/2818351-open-source-5-companies-code-projects)，首先我自己是一个忠实广场粉，okhttp、picasso、greendao、ok">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://walid1992.github.io/2016/08/25/Retrofit-2-0-官方文档/"/>
+
+
+
+
+
+  <title>Retrofit 2.0 官方文档 | Walid's Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Walid's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Luck oriented programming</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://walid1992.github.io/2016/08/25/Retrofit-2-0-官方文档/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="walid">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/7/A/C/1_walid1992.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Walid's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Retrofit 2.0 官方文档</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-25T23:25:30+08:00">
+                2016-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  来自[移动支付公司square](https://github.com/square/retrofit)公司的作品，[开源世界top5的最小公司](http://www.csdn.net/article/2014-02-10/2818351-open-source-5-companies-code-projects)，首先我自己是一个忠实广场粉，okhttp、picasso、greendao、okio等等~ 据Square CTO Bob Lee的说法，Square已经将超过60个项目提交到开源社区，贡献了25万行左右的代码~
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>来自<a href="https://github.com/square/retrofit" target="_blank" rel="external">移动支付公司square</a>公司的作品，<a href="http://www.csdn.net/article/2014-02-10/2818351-open-source-5-companies-code-projects" target="_blank" rel="external">开源世界top5的最小公司</a>，首先我自己是一个忠实广场粉，okhttp、picasso、greendao、okio等等~ 据Square CTO Bob Lee的说法，Square已经将超过60个项目提交到开源社区，贡献了25万行左右的代码。</p>
+<p><strong>原文：<a href="http://inthecheesefactory.com/blog/retrofit-2.0/en" target="_blank" rel="external">Retrofit 2.0: The biggest update yet on the best HTTP Client Library for Android</a></strong></p>
+<p>因为其简单与出色的性能，Retrofit 是安卓上最流行的HTTP Client库之一。</p>
+<p>不过它的缺点是在Retrofit 1.x中没有直接取消正在进行中任务的方法。如果你想做这件事必须手动杀死，而这并不好实现。</p>
+<p>Square几年前曾许诺这个功能将在Retrofit 2.0实现，但是几年过去了仍然没有在这个问题上有所更新。</p>
+<p>API 声明</p>
+<p>接口函数的注解和参数表明如何去处理请求 请求方法</p>
+<p>每一个函数都必须有提供请求方式和相对URL的Http注解，Retrofit提供了5种内置的注解：GET、POST、PUT、DELETE和HEAD，在注解中指定的资源的相对URL</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@<span class="keyword">GET</span>("<span class="keyword">users</span>/<span class="keyword">list</span>")</div></pre></td></tr></table></figure>
+<p>也可以在URL中指定查询参数</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@<span class="keyword">GET</span>("<span class="keyword">users</span>/<span class="keyword">list</span>?<span class="keyword">sort</span>=<span class="keyword">desc</span>")</div></pre></td></tr></table></figure>
+<p>URL处理</p>
+<p>请求的URL可以在函数中使用替换块和参数进行动态更新，替换块是{ and }包围的字母数字组成的字符串，相应的参数必须使用相同的字符串被@Path进行注释</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@GET</span>(<span class="string">"group/&#123;id&#125;/users"</span>)</div><div class="line">List&lt;User&gt; groupList(<span class="variable">@Path</span>(<span class="string">"id"</span>) int groupId);</div></pre></td></tr></table></figure>
+<p>也可以添加查询参数</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@GET</span>(<span class="string">"group/&#123;id&#125;/users"</span>)</div><div class="line">List&lt;User&gt; groupList(<span class="variable">@Path</span>(<span class="string">"id"</span>) int groupId, <span class="variable">@Query</span>(<span class="string">"sort"</span>) String sort);</div></pre></td></tr></table></figure>
+<p>复杂的查询参数可以使用Map进行组合</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@GET</span>(<span class="string">"group/&#123;id&#125;/users"</span>)</div><div class="line">List&lt;User&gt; groupList(<span class="variable">@Path</span>(<span class="string">"id"</span>) int groupId, <span class="variable">@QueryMap</span> Map&lt;String, String&gt; options);</div></pre></td></tr></table></figure>
+<p>请求体</p>
+<p>可以通过@Body注解指定一个对象作为Http请求的请求体</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@POST</span>(<span class="string">"users/new"</span>)</div><div class="line">Call&lt;User&gt; createUser(<span class="variable">@Body</span> User user);</div></pre></td></tr></table></figure>
+<p>该对象将会被Retroofit实例指定的转换器转换，如果没有添加转换器，则只有RequestBody可用。（转换器的添加在后面介绍） FORM ENCODED 和 MULTIPART</p>
+<p>函数也可以声明为发送form-encoded和multipart数据。 当函数有@FormUrlEncoded注解的时候，将会发送form-encoded数据，每个键-值对都要被含有名字的@Field注解和提供值的对象所标注</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@FormUrlEncoded</span></div><div class="line"><span class="variable">@POST</span>(<span class="string">"user/edit"</span>)</div><div class="line">Call&lt;User&gt; updateUser(<span class="variable">@Field</span>(<span class="string">"first_name"</span>) String first, <span class="variable">@Field</span>(<span class="string">"last_name"</span>) String last);</div></pre></td></tr></table></figure>
+<p>当函数有@Multipart注解的时候，将会发送multipart数据，Parts都使用@Part注解进行声明</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@Multipart</span></div><div class="line"><span class="variable">@PUT</span>(<span class="string">"user/photo"</span>)</div><div class="line">Call&lt;User&gt; updateUser(<span class="variable">@Part</span>(<span class="string">"photo"</span>) RequestBody photo, <span class="variable">@Part</span>(<span class="string">"description"</span>) RequestBody description);</div></pre></td></tr></table></figure>
+<p>Multipart parts要使用Retrofit的众多转换器之一或者实现RequestBody来处理自己的序列化。 Header处理</p>
+<p>可以使用@Headers注解给函数设置静态的header</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@Headers</span>(<span class="string">"Cache-Control: max-age=640000"</span>)</div><div class="line"><span class="variable">@GET</span>(<span class="string">"widget/list"</span>)</div><div class="line">Call&lt;List&lt;Widget&gt;&gt; widgetList();</div><div class="line"></div><div class="line"><span class="variable">@Headers</span>(&#123;</div><div class="line">    <span class="string">"Accept: application/vnd.github.v3.full+json"</span>,</div><div class="line">    <span class="string">"User-Agent: Retrofit-Sample-App"</span></div><div class="line">&#125;)</div><div class="line"><span class="variable">@GET</span>(<span class="string">"users/&#123;username&#125;"</span>)</div><div class="line">Call&lt;User&gt; getUser(<span class="variable">@Path</span>(<span class="string">"username"</span>) String username);</div></pre></td></tr></table></figure>
+<p>需要注意的是：header不能被互相覆盖。所有具有相同名字的header将会被包含到请求中。</p>
+<p>可以使用@Header注解动态的更新一个请求的header。必须给@Header提供相应的参数，如果参数的值为空header将会被忽略，否则就调用参数值的toString()方法并使用返回结果</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">@GET</span>(<span class="string">"user"</span>)</div><div class="line">Call&lt;User&gt; getUser(<span class="variable">@Header</span>(<span class="string">"Authorization"</span>) String authorization)</div></pre></td></tr></table></figure>
+<p>使用OkHttp拦截器可以指定需要的header给每一个Http请求</p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="type">OkHttpClient</span> client = <span class="function"><span class="keyword">new</span> <span class="title">OkHttpClient</span>();</span></div><div class="line"><span class="title">client</span>.<span class="title">networkInterceptors</span>().<span class="title">add</span>(new <span class="type">Interceptor</span>() &#123;</div><div class="line">    @<span class="title">Override</span></div><div class="line">    <span class="title">public</span> <span class="title">com</span>.<span class="title">squareup</span>.<span class="title">okhttp</span>.<span class="title">Response</span> <span class="title">intercept</span>(<span class="type">Chain</span> chain) <span class="title">throws</span> <span class="title">IOException</span> &#123;</div><div class="line">        <span class="title">com</span>.<span class="title">squareup</span>.<span class="title">okhttp</span>.<span class="title">Response</span> <span class="title">response</span> = <span class="title">chain</span>.<span class="title">proceed</span>(chain.request());</div><div class="line">        <span class="comment">// Do anything with response here</span></div><div class="line"></div><div class="line">        <span class="title">return</span> <span class="title">response</span>;</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"><span class="title">Retrofit</span> <span class="title">retrofit</span> = <span class="title">new</span> <span class="title">Retrofit</span>.<span class="title">Builder</span>()</div><div class="line">        .<span class="title">baseUrl</span>(<span class="type">BASE_URL</span>)</div><div class="line">        ...</div><div class="line">        .<span class="title">client</span>(client)</div><div class="line">        .<span class="title">build</span>();</div></pre></td></tr></table></figure>
+<p>新的Service定义方式，不再有同步和异步之分 关于在Retrofit 1.9中service 接口的定义，如果你想定义一个同步的函数，你应该这样定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* Synchronous in Retrofit 1.9 */</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">APIService</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@POST</span>(<span class="string">"/list"</span>)</div><div class="line">    <span class="function">Repo <span class="title">loadRepo</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>而定义一个异步的则是这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* Asynchronous in Retrofit 1.9 */</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">APIService</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@POST</span>(<span class="string">"/list"</span>)</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">loadRepo</span><span class="params">(Callback&lt;Repo&gt; cb)</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是在Retrofit 2.0上，只能定义一个模式，因此要简单得多。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> retrofit.Call;</div><div class="line"></div><div class="line"><span class="comment">/* Retrofit 2.0 */</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">APIService</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@POST</span>(<span class="string">"/list"</span>)</div><div class="line">    <span class="function">Call&lt;Repo&gt; <span class="title">loadRepo</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>而创建service 的方法也变得和OkHttp的模式一模一样。如果要调用同步请求，只需调用execute；而发起一个异步请求则是调用enqueue。</p>
+<p>同步请求</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// Synchronous <span class="built_in">Call</span> <span class="keyword">in</span> Retrofit <span class="number">2.0</span></div><div class="line"></div><div class="line"><span class="built_in">Call</span>&lt;Repo&gt; <span class="built_in">call</span> = service.loadRepo()<span class="comment">;</span></div><div class="line">Repo repo = <span class="built_in">call</span>.<span class="built_in">execute</span>()<span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>以上的代码会阻塞线程，因此你不能在安卓的主线程中调用，不然会面临NetworkOnMainThreadException。如果你想调用execute方法，请在后台线程执行。</p>
+<p>异步请求</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// Synchronous <span class="keyword">Call</span> <span class="keyword">in</span> Retrofit <span class="number">2.0</span></div><div class="line"></div><div class="line"><span class="keyword">Call</span>&lt;Repo&gt; <span class="keyword">call</span> = service.loadRepo();</div><div class="line">call.enqueue(<span class="keyword">new</span> Callback&lt;Repo&gt;() &#123;</div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="built_in">void</span> onResponse(Response&lt;Repo&gt; response) &#123;</div><div class="line">        // <span class="keyword">Get</span> <span class="keyword">result</span> Repo <span class="keyword">from</span> response.body()</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="built_in">void</span> onFailure(Throwable t) &#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>以上代码发起了一个在后台线程的请求并从response 的response.body()方法中获取一个结果对象。注意这里的onResponse和onFailure方法是在主线程中调用的。</p>
+<p>我建议你使用enqueue，它最符合 Android OS的习惯。</p>
+<p>取消正在进行中的业务 service 的模式变成Call的形式的原因是为了让正在进行的事务可以被取消。要做到这点，你只需调用call.cancel()。</p>
+<p>call.cancel(); 事务将会在之后立即被取消。好简单嘿嘿！</p>
+<p>Converter现在从Retrofit中删除 在Retrofit 1.9中，GsonConverter 包含在了package 中而且自动在RestAdapter创建的时候被初始化。这样来自服务器的son结果会自动解析成定义好了的Data Access Object（DAO）</p>
+<p>但是在Retrofit 2.0中，Converter 不再包含在package 中了。你需要自己插入一个Converter 不然的话Retrofit 只能接收字符串结果。同样的，Retrofit 2.0也不再依赖于Gson 。</p>
+<p>如果你想接收json 结果并解析成DAO，你必须把Gson Converter 作为一个独立的依赖添加进来。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">compile</span> <span class="string">'com.squareup.retrofit:converter-gson:2.0.0-beta1'</span></div></pre></td></tr></table></figure>
+<p>然后使用addConverterFactory把它添加进来。注意RestAdapter的别名仍然为Retrofit。</p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="type">Retrofit</span> retrofit = <span class="function"><span class="keyword">new</span> <span class="title">Retrofit</span>.<span class="title">Builder</span>()</span></div><div class="line">        .<span class="title">baseUrl</span>("http://api.nuuneoi.com/base/")</div><div class="line">        .<span class="title">addConverterFactory</span>(<span class="type">GsonConverterFactory</span>.create())</div><div class="line">        .<span class="title">build</span>();</div><div class="line"></div><div class="line"><span class="title">service</span> = <span class="title">retrofit</span>.<span class="title">create</span>(<span class="type">APIService</span>.class);</div></pre></td></tr></table></figure>
+<p>这里是Square提供的官方Converter modules列表。选择一个最满足你需求的。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">Gson</span>: <span class="selector-tag">com</span><span class="selector-class">.squareup</span><span class="selector-class">.retrofit</span><span class="selector-pseudo">:converter-gson</span></div><div class="line"><span class="selector-tag">Jackson</span>: <span class="selector-tag">com</span><span class="selector-class">.squareup</span><span class="selector-class">.retrofit</span><span class="selector-pseudo">:converter-jackson</span></div><div class="line"><span class="selector-tag">Moshi</span>: <span class="selector-tag">com</span><span class="selector-class">.squareup</span><span class="selector-class">.retrofit</span><span class="selector-pseudo">:converter-moshi</span></div><div class="line"><span class="selector-tag">Protobuf</span>: <span class="selector-tag">com</span><span class="selector-class">.squareup</span><span class="selector-class">.retrofit</span><span class="selector-pseudo">:converter-protobuf</span></div><div class="line"><span class="selector-tag">Wire</span>: <span class="selector-tag">com</span><span class="selector-class">.squareup</span><span class="selector-class">.retrofit</span><span class="selector-pseudo">:converter-wire</span></div><div class="line"><span class="selector-tag">Simple</span> <span class="selector-tag">XML</span>: <span class="selector-tag">com</span><span class="selector-class">.squareup</span><span class="selector-class">.retrofit</span><span class="selector-pseudo">:converter-simplexml</span></div></pre></td></tr></table></figure>
+<p>你也可以通过实现Converter.Factory接口来创建一个自定义的converter 。</p>
+<p>我比较赞同这种新的模式。它让Retrofit对自己要做的事情看起来更清晰。</p>
+<p>自定义Gson对象 为了以防你需要调整json里面的一些格式，比如，Date Format。你可以创建一个Gson 对象并把它传递给GsonConverterFactory.create()。</p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="type">Gson</span> gson = <span class="function"><span class="keyword">new</span> <span class="title">GsonBuilder</span>()</span></div><div class="line">        .<span class="title">setDateFormat</span>("yyyy-<span class="type">MM</span>-dd'<span class="type">T</span>'<span class="type">HH</span>:mm:ssZ")</div><div class="line">        .<span class="title">create</span>();</div><div class="line"></div><div class="line"><span class="title">Retrofit</span> <span class="title">retrofit</span> = <span class="title">new</span> <span class="title">Retrofit</span>.<span class="title">Builder</span>()</div><div class="line">        .<span class="title">baseUrl</span>("http://api.nuuneoi.com/base/")</div><div class="line">        .<span class="title">addConverterFactory</span>(<span class="type">GsonConverterFactory</span>.create(gson))</div><div class="line">        .<span class="title">build</span>();</div><div class="line"></div><div class="line"><span class="title">service</span> = <span class="title">retrofit</span>.<span class="title">create</span>(<span class="type">APIService</span>.class);</div></pre></td></tr></table></figure>
+<p>完成。</p>
+<p>新的URL定义方式 Retrofit 2.0使用了新的URL定义方式。Base URL与@Url 不是简单的组合在一起而是和”<a href="...">“的处理方式一致。用下面的几个例子阐明。</a></p>
+<p>[1、ps：貌似第二个才符合习惯。</p>
+<p>对于 Retrofit 2.0中新的URL定义方式，这里是我的建议：</p>
+<ul>
+<li><p>Base URL: 总是以 /结尾</p>
+</li>
+<li><p>@Url: 不要以 / 开头</p>
+</li>
+</ul>
+<p>比如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">APIService</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@POST</span>(<span class="string">"user/list"</span>)</div><div class="line">    <span class="function">Call&lt;Users&gt; <span class="title">loadUsers</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">    Retrofit retrofit = <span class="keyword">new</span> Retrofit.Builder()</div><div class="line">            .baseUrl(<span class="string">"http://api.nuuneoi.com/base/"</span>)</div><div class="line">            .addConverterFactory(GsonConverterFactory.create())</div><div class="line">            .build();</div><div class="line"></div><div class="line">    APIService service = retrofit.create(APIService.class);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上代码中的loadUsers会从 <a href="http://api.nuuneoi.com/base/user/list获取数据。" target="_blank" rel="external">http://api.nuuneoi.com/base/user/list获取数据。</a></p>
+<p>而且在Retrofit 2.0中我们还可以在@Url里面定义完整的URL：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">APIService</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@POST</span>(<span class="string">"http://api.nuuneoi.com/special/user/list"</span>)</div><div class="line">    <span class="function">Call&lt;Users&gt; <span class="title">loadSpecialUsers</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种情况下Base URL会被忽略。</p>
+<p>可以看到在URL的处理方式上发生了很大变化。它和前面的版本完全不同。如果你想把代码迁移到Retrofit 2.0，别忘了修正URL部分的代码。</p>
+<p>现在需要OkHttp的支持 OkHttp 在Retrofit 1.9里是可选的。如果你想让Retrofit 使用OkHttp 作为HTTP 连接接口，你需要手动包含okhttp 依赖。</p>
+<p>但是在Retrofit 2.0中，OkHttp 是必须的，并且自动设置为了依赖。下面的代码是从Retrofit 2.0的pom文件中抓取的。你不需要再做任何事情了。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.squareup.okhttp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>okhttp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line">  ...</div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>为了让OkHttp 的Call模式成为可能，在Retrofit 2.0中OkHttp 自动被用作HTTP 接口。</p>
+<p>即使response存在问题onResponse依然被调用 在Retrofit 1.9中，如果获取的 response 不能背解析成定义好的对象，则会调用failure。但是在Retrofit 2.0中，不管 response 是否能被解析。onResponse总是会被调用。但是在结果不能被解析的情况下，response.body()会返回null。别忘了处理这种情况。</p>
+<p>如果response存在什么问题，比如404什么的，onResponse也会被调用。你可以从response.errorBody().string()中获取错误信息的主体。</p>
+<p>Response/Failure 逻辑和Retrofit 1.9差别很大。如果你决定迁移到Retrofit 2.0，注意小心谨慎的处理这些情况。</p>
+<p>缺少INTERNET权限会导致SecurityException异常 在Retrofit 1.9中，如果你忘记在AndroidManifest.xml文件中添加INTERNET权限。异步请求会直接进入failure回调方法，得到PERMISSION DENIED 错误消息。没有任何异常被抛出。</p>
+<p>但是在Retrofit 2.0中，当你调用call.enqueue或者call.execute，将立即抛出SecurityException，如果你不使用try-catch会导致崩溃。</p>
+<p>这类似于在手动调用HttpURLConnection时候的行为。不过这不是什么大问题，因为当INTERNET权限添加到了 AndroidManifest.xml中就没有什么需要考虑的了。</p>
+<p>Use an Interceptor from OkHttp 在Retrofit 1.9中，你可以使用RequestInterceptor来拦截一个请求，但是它已经从Retrofit 2.0 移除了，因为HTTP连接层已经转为OkHttp。</p>
+<p>结果就是，现在我们必须转而使用OkHttp里面的Interceptor。首先你需要使用Interceptor创建一个OkHttpClient对象，如下：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line">client.interceptors().add(<span class="keyword">new</span> Interceptor() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="function">Response <span class="title">intercept</span><span class="params">(Chain chain)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        Response response = chain.<span class="keyword">proceed</span>(chain.request());</div><div class="line"></div><div class="line">        <span class="comment">// Do anything with response here</span></div><div class="line"></div><div class="line">        <span class="keyword">return</span> response;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>然后传递创建的client到Retrofit的Builder链中。</p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="type">Retrofit</span> retrofit = <span class="function"><span class="keyword">new</span> <span class="title">Retrofit</span>.<span class="title">Builder</span>()</span></div><div class="line">        .<span class="title">baseUrl</span>("http://api.nuuneoi.com/base/")</div><div class="line">        .<span class="title">addConverterFactory</span>(<span class="type">GsonConverterFactory</span>.create())</div><div class="line">        .<span class="title">client</span>(client)</div><div class="line">        .<span class="title">build</span>();</div></pre></td></tr></table></figure>
+<p>以上为全部内容。</p>
+<p>学习关于OkHttp Interceptor的知识，请到OkHttp Interceptors。</p>
+<p>RxJava Integration with CallAdapter 除了使用Call模式来定义接口，我们也可以定义自己的type，比如MyCall。。我们把Retrofit 2.0的这个机制称为CallAdapter。</p>
+<p>Retrofit团队有已经准备好了的CallAdapter module。其中最著名的module可能是为RxJava准备的CallAdapter，它将作为Observable返回。要使用它，你的项目依赖中必须包含两个modules。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">compile</span> <span class="string">'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1'</span></div><div class="line"><span class="keyword">compile</span> <span class="string">'io.reactivex:rxandroid:1.0.1'</span></div></pre></td></tr></table></figure>
+<p>Sync Gradle并在Retrofit Builder链表中如下调用addCallAdapterFactory：</p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="type">Retrofit</span> retrofit = <span class="function"><span class="keyword">new</span> <span class="title">Retrofit</span>.<span class="title">Builder</span>()</span></div><div class="line">        .<span class="title">baseUrl</span>("http://api.nuuneoi.com/base/")</div><div class="line">        .<span class="title">addConverterFactory</span>(<span class="type">GsonConverterFactory</span>.create())</div><div class="line">        .<span class="title">addCallAdapterFactory</span>(<span class="type">RxJavaCallAdapterFactory</span>.create())</div><div class="line">        .<span class="title">build</span>();</div></pre></td></tr></table></figure>
+<p>你的Service接口现在可以作为Observable返回了！</p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="type">Retrofit</span> retrofit = <span class="function"><span class="keyword">new</span> <span class="title">Retrofit</span>.<span class="title">Builder</span>()</span></div><div class="line">        .<span class="title">baseUrl</span>("http://api.nuuneoi.com/base/")</div><div class="line">        .<span class="title">addConverterFactory</span>(<span class="type">GsonConverterFactory</span>.create())</div><div class="line">        .<span class="title">addCallAdapterFactory</span>(<span class="type">RxJavaCallAdapterFactory</span>.create())</div><div class="line">        .<span class="title">build</span>();</div></pre></td></tr></table></figure>
+<p>你可以完全像RxJava那样使用它，如果你想让subscribe部分的代码在主线程被调用，需要把observeOn(AndroidSchedulers.mainThread())添加到链表中。</p>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="type">Observable</span>&lt;<span class="type">DessertItemCollectionDao</span>&gt; observable = service.loadDessertListRx();</div><div class="line"></div><div class="line">observable.observeOn(<span class="type">AndroidSchedulers</span>.mainThread())</div><div class="line">    .subscribe(<span class="function"><span class="keyword">new</span> <span class="title">Subscriber</span>&lt;<span class="title">DessertItemCollectionDao</span>&gt;() &#123;</span></div><div class="line">        @<span class="title">Override</span></div><div class="line">        <span class="title">public</span> <span class="title">void</span> <span class="title">onCompleted</span>() &#123;</div><div class="line">            <span class="title">Toast</span>.<span class="title">makeText</span>(getApplicationContext(),</div><div class="line">                    "<span class="title">Completed</span>",</div><div class="line">                    <span class="title">Toast</span>.<span class="title">LENGTH_SHORT</span>)</div><div class="line">                .<span class="title">show</span>();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @<span class="title">Override</span></div><div class="line">        <span class="title">public</span> <span class="title">void</span> <span class="title">onError</span>(<span class="type">Throwable</span> e) &#123;</div><div class="line">            <span class="title">Toast</span>.<span class="title">makeText</span>(getApplicationContext(),</div><div class="line">                    <span class="title">e</span>.<span class="title">getMessage</span>(),</div><div class="line">                    <span class="title">Toast</span>.<span class="title">LENGTH_SHORT</span>)</div><div class="line">                .<span class="title">show</span>();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @<span class="title">Override</span></div><div class="line">        <span class="title">public</span> <span class="title">void</span> <span class="title">onNext</span>(<span class="type">DessertItemCollectionDao</span> dessertItemCollectionDao) &#123;</div><div class="line">            <span class="title">Toast</span>.<span class="title">makeText</span>(getApplicationContext(),</div><div class="line">                    <span class="title">dessertItemCollectionDao</span>.<span class="title">getData</span>().<span class="title">get</span>(<span class="number">0</span>).<span class="title">getName</span>(),</div><div class="line">                    <span class="title">Toast</span>.<span class="title">LENGTH_SHORT</span>)</div><div class="line">                .<span class="title">show</span>();</div><div class="line">        &#125;</div><div class="line">    &#125;);</div></pre></td></tr></table></figure>
+<p>完成！我相信RxJava的粉丝对这个变化相当满意。</p>
+<p>总结 还有许多其他变化，你可以在官方的Change Log 中获取更多详情。不过，我相信我已经在本文涵盖了主要的issues。</p>
+<p>你可能会好奇现在是否是切换到Retrofit 2.0 的时机？考虑到它仍然是beta阶段，你可能会希望继续停留在1.9除非你跟我一样是一个喜欢尝鲜的人。 Retrofit 2.0用起来很好据我的经验来看还没有发现bug。</p>
+<p>注意Retrofit 1.9 的官方文档现在已经从Square的github主页删除。我建议你现在就开始学习Retrofit 2.0，尽快使用最新版本。](…)</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/05/RxJava 基础/" rel="prev" title="RxJava 基础">
+                RxJava 基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/7/A/C/1_walid1992.jpg"
+               alt="walid" />
+          <p class="site-author-name" itemprop="name">walid</p>
+           
+              <p class="site-description motion-element" itemprop="description">Walid's Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">walid</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

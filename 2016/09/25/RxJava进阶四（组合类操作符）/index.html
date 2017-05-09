@@ -1,0 +1,776 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RxJava," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="本篇文章带着大家熟悉一下RxJava的组合类操作符，本系列文章仅是带大家认识一下这些操作符的用法，并没有对操作符进行多种形态的使用，具体的还需要大家在使用时注意~">
+<meta name="keywords" content="RxJava">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RxJava进阶四（组合类操作符）">
+<meta property="og:url" content="https://walid1992.github.io/2016/09/25/RxJava进阶四（组合类操作符）/index.html">
+<meta property="og:site_name" content="Walid&#39;s Blog">
+<meta property="og:description" content="本篇文章带着大家熟悉一下RxJava的组合类操作符，本系列文章仅是带大家认识一下这些操作符的用法，并没有对操作符进行多种形态的使用，具体的还需要大家在使用时注意~">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-168a4c26c95d0b43?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-04-10T12:42:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RxJava进阶四（组合类操作符）">
+<meta name="twitter:description" content="本篇文章带着大家熟悉一下RxJava的组合类操作符，本系列文章仅是带大家认识一下这些操作符的用法，并没有对操作符进行多种形态的使用，具体的还需要大家在使用时注意~">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2843033-168a4c26c95d0b43?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://walid1992.github.io/2016/09/25/RxJava进阶四（组合类操作符）/"/>
+
+
+
+
+
+  <title>RxJava进阶四（组合类操作符） | Walid's Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Walid's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Luck oriented programming</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://walid1992.github.io/2016/09/25/RxJava进阶四（组合类操作符）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="walid">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/7/A/C/1_walid1992.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Walid's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RxJava进阶四（组合类操作符）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-25T22:30:30+08:00">
+                2016-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  本篇文章带着大家熟悉一下RxJava的组合类操作符，本系列文章仅是带大家认识一下这些操作符的用法，并没有对操作符进行多种形态的使用，具体的还需要大家在使用时注意~
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://upload-images.jianshu.io/upload_images/2843033-168a4c26c95d0b43?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="RxJava进阶"></p>
+<p><a href="http://www.jianshu.com/p/0cb521ba1e10" target="_blank" rel="external">RxJava进阶一（创建类操作符）</a><br><a href="http://www.jianshu.com/p/fafc82b579cd" target="_blank" rel="external">RxJava进阶二（转换类操作符）</a><br><a href="http://www.jianshu.com/p/bfd0b780344a" target="_blank" rel="external">RxJava进阶三（过滤类操作符）</a><br>RxJava进阶四（组合类操作符）</p>
+<hr>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇文章带着大家熟悉一下RxJava的组合类操作符，本系列文章仅是带大家认识一下这些操作符的用法，并没有对操作符进行多种形态的使用，具体的还需要大家在使用时注意~</p>
+<h2 id="操作符总览"><a href="#操作符总览" class="headerlink" title="操作符总览"></a>操作符总览</h2><p>CombineLatest、Join、Merge、StartWith、Switch、Zip…</p>
+<h2 id="具体使用介绍"><a href="#具体使用介绍" class="headerlink" title="具体使用介绍"></a>具体使用介绍</h2><p>####CombineLatest ##</p>
+<p>当两个Observables中的任何一个发射了一个数据时，将两个Observables数据通过指定的规则进行处理，将结果进行发射~</p>
+<p>代码示例：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Observable&lt;<span class="keyword">Long</span>&gt; observable1 = Observable.interval(<span class="number">0</span>, <span class="number">500</span>, TimeUnit.MILLISECONDS).take(<span class="number">3</span>);</div><div class="line">Observable&lt;<span class="keyword">Long</span>&gt; observable2 = Observable.interval(<span class="number">500</span>, <span class="number">500</span>, TimeUnit.MILLISECONDS).take(<span class="number">3</span>);</div><div class="line"></div><div class="line">Observable.combineLatest(observable1, observable2, <span class="keyword">new</span> Func2&lt;<span class="keyword">Long</span>, <span class="keyword">Long</span>, <span class="keyword">Long</span>&gt;() &#123;</div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="keyword">Long</span> <span class="keyword">call</span>(<span class="keyword">Long</span> along1, <span class="keyword">Long</span> along2) &#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"along1 --&gt; "</span> + along1);</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"along2 --&gt; "</span> + along2);</div><div class="line">        <span class="keyword">return</span> along1 + along2;</div><div class="line">    &#125;</div><div class="line">&#125;).subscribe(<span class="keyword">new</span> Action1&lt;<span class="keyword">Long</span>&gt;() &#123;</div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">call</span>(<span class="keyword">Long</span> aLong) &#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"result = "</span> + aLong);</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"--------------"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.319</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along1 --&gt; <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.319</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along2 --&gt; <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.319</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.319</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.816</span> <span class="number">6650</span>-<span class="number">6728</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along1 --&gt; <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.816</span> <span class="number">6650</span>-<span class="number">6728</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along2 --&gt; <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.816</span> <span class="number">6650</span>-<span class="number">6728</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.817</span> <span class="number">6650</span>-<span class="number">6728</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.818</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along1 --&gt; <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.820</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along2 --&gt; <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.821</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">3</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">12.821</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">13.315</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along1 --&gt; <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">13.315</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: along2 --&gt; <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">13.315</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">4</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">00</span>:<span class="number">13.315</span> <span class="number">6650</span>-<span class="number">6698</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div></pre></td></tr></table></figure>
+<p><strong>结论：</strong></p>
+<p><strong> 1.只有当两个observable都发射过第一项数据时，才能进行组合发射</strong></p>
+<p>从log日志来看，observable1打印的第一项数据为1，所以可以推断observable1发射的0数据时，observable2并没有发射过数据，所以并没有进行组合。</p>
+<p><strong> 2.当observable1与observable2都发射首个数据后，在此发射任何数据都会找相应的另外一个observable的最新数据进行组合发射</strong></p>
+<h4 id="Join"><a href="#Join" class="headerlink" title="Join"></a>Join</h4><p>无论何时，如果一个Observable发射了一个数据项，只要在另一个Observable发射的数据项定义的<strong>时间窗口内</strong>，就将两个Observable发射的数据合并发射~</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">Observable&lt;<span class="keyword">Long</span>&gt; observable1 = Observable.interval(<span class="number">2000</span>, <span class="number">1000</span>, TimeUnit.MILLISECONDS).take(<span class="number">3</span>);</div><div class="line">Observable&lt;<span class="keyword">Long</span>&gt; observable2 = Observable.interval(<span class="number">2500</span>, <span class="number">1000</span>, TimeUnit.MILLISECONDS).take(<span class="number">3</span>);</div><div class="line"></div><div class="line">observable1</div><div class="line">        .<span class="keyword">join</span>(</div><div class="line">                observable2,</div><div class="line">                <span class="keyword">new</span> Func1&lt;<span class="keyword">Long</span>, Observable&lt;<span class="keyword">Long</span>&gt;&gt;() &#123;</div><div class="line">                    @Override</div><div class="line">                    <span class="keyword">public</span> Observable&lt;<span class="keyword">Long</span>&gt; <span class="keyword">call</span>(<span class="keyword">Long</span> aLong) &#123;</div><div class="line">                        <span class="comment">//使Observable延迟500毫秒执行</span></div><div class="line">                        System.out.<span class="keyword">println</span>(<span class="string">"observable1 -- &gt;"</span> + aLong);</div><div class="line">                        <span class="keyword">return</span> Observable.just(aLong).delay(<span class="number">500</span>, TimeUnit.MILLISECONDS);</div><div class="line">                    &#125;</div><div class="line">                &#125;,</div><div class="line">                <span class="keyword">new</span> Func1&lt;<span class="keyword">Long</span>, Observable&lt;<span class="keyword">Long</span>&gt;&gt;() &#123;</div><div class="line">                    @Override</div><div class="line">                    <span class="keyword">public</span> Observable&lt;<span class="keyword">Long</span>&gt; <span class="keyword">call</span>(<span class="keyword">Long</span> aLong) &#123;</div><div class="line">                        System.out.<span class="keyword">println</span>(<span class="string">"observable2 -- &gt;"</span> + aLong);</div><div class="line">                        <span class="keyword">return</span> Observable.just(aLong).delay(<span class="number">500</span>, TimeUnit.MILLISECONDS);</div><div class="line">                    &#125;</div><div class="line">                &#125;,</div><div class="line">                <span class="keyword">new</span> Func2&lt;<span class="keyword">Long</span>, <span class="keyword">Long</span>, <span class="keyword">Long</span>&gt;() &#123;</div><div class="line">                    @Override</div><div class="line">                    <span class="keyword">public</span> <span class="keyword">Long</span> <span class="keyword">call</span>(<span class="keyword">Long</span> aLong1, <span class="keyword">Long</span> aLong2) &#123;</div><div class="line">                        System.out.<span class="keyword">println</span>(<span class="string">"aLong1 = "</span> + aLong1);</div><div class="line">                        System.out.<span class="keyword">println</span>(<span class="string">"aLong2 = "</span> + aLong2);</div><div class="line">                        <span class="keyword">return</span> aLong1 + aLong2;</div><div class="line">                    &#125;</div><div class="line">                &#125;)</div><div class="line">        .subscribe(<span class="keyword">new</span> Action1&lt;<span class="keyword">Long</span>&gt;() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">call</span>(<span class="keyword">Long</span> aLong) &#123;</div><div class="line">                System.out.<span class="keyword">println</span>(<span class="string">"result = "</span> + aLong);</div><div class="line">                System.out.<span class="keyword">println</span>(<span class="string">"--------------"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">56.988</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: observable1 -- &gt;<span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.488</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: observable2 -- &gt;<span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.488</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong1 = <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.488</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong2 = <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.488</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.488</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.991</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: observable1 -- &gt;<span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.991</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong1 = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.991</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong2 = <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.991</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">57.991</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.490</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: observable2 -- &gt;<span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.490</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong1 = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.490</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong2 = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.490</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.490</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.990</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: observable1 -- &gt;<span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.990</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong1 = <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.990</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong2 = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.990</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">3</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">58.990</span> <span class="number">20959</span>-<span class="number">21011</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">59.489</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: observable2 -- &gt;<span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">59.489</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong1 = <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">59.489</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: aLong2 = <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">59.489</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">4</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">59.489</span> <span class="number">20959</span>-<span class="number">21041</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: --------------</div></pre></td></tr></table></figure>
+<p><strong>结论：</strong></p>
+<p><strong> 1.只有当两个observable都发射过第一项数据时，才能进行组合发射</strong></p>
+<p>从log日志来看，observable1发射数据0时，组合的call方法并没有被执行，而当observable2发射数据0后，组合call方法被回调了。</p>
+<p><strong> 2.当observable1与observable2都发射首个数据后，在此发射任何数据都会找相应的另外一个observable的最新数据进行组合发射</strong></p>
+<p>####Merge##</p>
+<p>将两个Observable发射的数据按照时间顺序进行组合，合并成一个Observable进行发射~</p>
+<p>代码示例：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">Observable&lt;<span class="built_in">String</span>&gt; observable1 = Observable.interval(<span class="number">0</span>, <span class="number">500</span>, TimeUnit.MILLISECONDS).take(<span class="number">3</span>).flatMap(<span class="keyword">new</span> Func1&lt;Long, Observable&lt;<span class="built_in">String</span>&gt;&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> Observable&lt;<span class="built_in">String</span>&gt; call(Long aLong) &#123;</div><div class="line">        <span class="keyword">return</span> Observable.just(<span class="string">"observable1 -- &gt;"</span> + aLong);</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line">Observable&lt;<span class="built_in">String</span>&gt; observable2 = Observable.interval(<span class="number">500</span>, <span class="number">500</span>, TimeUnit.MILLISECONDS).take(<span class="number">3</span>).flatMap(<span class="keyword">new</span> Func1&lt;Long, Observable&lt;<span class="built_in">String</span>&gt;&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> Observable&lt;<span class="built_in">String</span>&gt; call(Long aLong) &#123;</div><div class="line">        <span class="keyword">return</span> Observable.just(<span class="string">"observable2 -- &gt;"</span> + aLong);</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">Observable</div><div class="line">        .merge(observable1, observable2)</div><div class="line">        .subscribe(<span class="keyword">new</span> Action1&lt;<span class="built_in">String</span>&gt;() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="keyword">public</span> <span class="built_in">void</span> call(<span class="built_in">String</span> aString) &#123;</div><div class="line">                System.out.println(<span class="string">"result = "</span> + aString);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">11</span>:<span class="number">33.696</span> <span class="number">16661</span>-<span class="number">16737</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = observable1 -- &gt;<span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">11</span>:<span class="number">34.194</span> <span class="number">16661</span>-<span class="number">16737</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = observable1 -- &gt;<span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">11</span>:<span class="number">34.198</span> <span class="number">16661</span>-<span class="number">16711</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = observable2 -- &gt;<span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">11</span>:<span class="number">34.695</span> <span class="number">16661</span>-<span class="number">16737</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = observable1 -- &gt;<span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">11</span>:<span class="number">34.698</span> <span class="number">16661</span>-<span class="number">16711</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = observable2 -- &gt;<span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">11</span>:<span class="number">35.196</span> <span class="number">16661</span>-<span class="number">16711</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = observable2 -- &gt;<span class="number">2</span></div></pre></td></tr></table></figure>
+<p>####StartWith##</p>
+<p>在源Observable发射数据之前，先发射一个指定的数据序列或数据项~</p>
+<p>代码示例：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Observable</div><div class="line">        .just(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>)</div><div class="line">        .startWith(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</div><div class="line">        .subscribe(new Action1&lt;Integer&gt;() &#123;</div><div class="line">            @Override</div><div class="line">            public void call(Integer <span class="type">integer</span>) &#123;</div><div class="line">                System.out.println(<span class="string">"result = "</span> + <span class="type">integer</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">16</span>:<span class="number">43.077</span> <span class="number">21830</span>-<span class="number">21830</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">16</span>:<span class="number">43.078</span> <span class="number">21830</span>-<span class="number">21830</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">16</span>:<span class="number">43.078</span> <span class="number">21830</span>-<span class="number">21830</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">3</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">16</span>:<span class="number">43.078</span> <span class="number">21830</span>-<span class="number">21830</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">4</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">16</span>:<span class="number">43.078</span> <span class="number">21830</span>-<span class="number">21830</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">5</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">17</span>:<span class="number">16</span>:<span class="number">43.078</span> <span class="number">21830</span>-<span class="number">21830</span>/com<span class="selector-class">.shenghan</span><span class="selector-class">.haobaobei</span> I/System<span class="selector-class">.out</span>: result = <span class="number">6</span></div></pre></td></tr></table></figure>
+<p>####switchOnNext##</p>
+<p>把一组Observable转换成一个Observable，如果在同一个时间内产生两个或多个Observable产生的数据，只发射最后一个Observable产生的数据~</p>
+<p>示例代码：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">Observable&lt;Observable&lt;<span class="built_in">String</span>&gt;&gt; observable = Observable.interval(<span class="number">2000</span>, <span class="number">500</span>, TimeUnit.MILLISECONDS).<span class="built_in">map</span>(<span class="literal">new</span> Func1&lt;Long, Observable&lt;<span class="built_in">String</span>&gt;&gt;() &#123;</div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> Observable&lt;<span class="built_in">String</span>&gt; call(Long aLongOutside) &#123;</div><div class="line">        <span class="comment">//每隔250毫秒产生一组数据（0,1,2,3,4)</span></div><div class="line">        <span class="keyword">return</span> Observable.interval(<span class="number">0</span>, <span class="number">250</span>, TimeUnit.MILLISECONDS).<span class="built_in">map</span>(<span class="literal">new</span> Func1&lt;Long, <span class="built_in">String</span>&gt;() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="built_in">String</span> call(Long aLongInside) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="string">"aLongOutside = "</span> + aLongOutside + <span class="string">"| aLongInside = "</span> + aLongInside;</div><div class="line">            &#125;</div><div class="line">        &#125;).<span class="keyword">take</span>(<span class="number">5</span>);</div><div class="line">    &#125;</div><div class="line">&#125;).<span class="keyword">take</span>(<span class="number">2</span>);</div><div class="line"></div><div class="line">Observable.switchOnNext(observable).subscribe(<span class="literal">new</span> Action1&lt;<span class="built_in">String</span>&gt;() &#123;</div><div class="line">    @Override</div><div class="line">    <span class="keyword">public</span> <span class="literal">void</span> call(<span class="built_in">String</span> s) &#123;</div><div class="line">        System.out.println(<span class="string">"result = "</span> + s);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">20</span>:<span class="number">14.605</span> <span class="number">2921</span>-<span class="number">2993</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: result = aLongOutside = <span class="number">0</span>| aLongInside = <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">20</span>:<span class="number">14.857</span> <span class="number">2921</span>-<span class="number">2993</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: result = aLongOutside = <span class="number">0</span>| aLongInside = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">20</span>:<span class="number">15.103</span> <span class="number">2921</span>-<span class="number">3055</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: result = aLongOutside = <span class="number">1</span>| aLongInside = <span class="number">0</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">20</span>:<span class="number">15.353</span> <span class="number">2921</span>-<span class="number">3055</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: result = aLongOutside = <span class="number">1</span>| aLongInside = <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">20</span>:<span class="number">15.604</span> <span class="number">2921</span>-<span class="number">3055</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: result = aLongOutside = <span class="number">1</span>| aLongInside = <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">20</span>:<span class="number">15.853</span> <span class="number">2921</span>-<span class="number">3055</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: result = aLongOutside = <span class="number">1</span>| aLongInside = <span class="number">3</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">20</span>:<span class="number">16.104</span> <span class="number">2921</span>-<span class="number">3055</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: result = aLongOutside = <span class="number">1</span>| aLongInside = <span class="number">4</span></div></pre></td></tr></table></figure>
+<p>####Zip##</p>
+<p>使用一个指定的函数将多个Observable发射的数据组合在一起，然后将这个函数的结果作为单项数据发射，严格周期顺序进行合并，不能单独发射~</p>
+<p>示例代码：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">Observable&lt;<span class="built_in">String</span>&gt; observable1 = Observable.just(<span class="string">"walid - 1"</span>, <span class="string">"walid - 2"</span>, <span class="string">"walid - 3"</span>);</div><div class="line">Observable&lt;<span class="built_in">String</span>&gt; observable2 = Observable.just(<span class="string">"Jordan - 1"</span>, <span class="string">"Jordan - 2"</span>, <span class="string">"Jordan - 3"</span>, <span class="string">"Jordan - 4"</span>);</div><div class="line">Observable.zip(observable1, observable2, <span class="keyword">new</span> Func2&lt;<span class="built_in">String</span>, <span class="built_in">String</span>, <span class="built_in">String</span>&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="built_in">String</span> call(<span class="built_in">String</span> s1, <span class="built_in">String</span> s2) &#123;</div><div class="line">        <span class="keyword">return</span> s1 + <span class="string">" | "</span> + s2;</div><div class="line">    &#125;</div><div class="line">&#125;).subscribe(<span class="keyword">new</span> Subscriber&lt;<span class="built_in">String</span>&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="built_in">void</span> onCompleted() &#123;</div><div class="line">        System.out.println(<span class="string">"onCompleted"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="built_in">void</span> onError(Throwable e) &#123;</div><div class="line">        System.err.println(<span class="string">"onError"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="built_in">void</span> onNext(<span class="built_in">String</span> value) &#123;</div><div class="line">        System.out.println(<span class="string">"onNext --&gt; "</span> + value);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">53</span>:<span class="number">31.772</span> <span class="number">24793</span>-<span class="number">24793</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: onNext --&gt; walid - <span class="number">1</span> | Jordan - <span class="number">1</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">53</span>:<span class="number">31.772</span> <span class="number">24793</span>-<span class="number">24793</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: onNext --&gt; walid - <span class="number">2</span> | Jordan - <span class="number">2</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">53</span>:<span class="number">31.772</span> <span class="number">24793</span>-<span class="number">24793</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: onNext --&gt; walid - <span class="number">3</span> | Jordan - <span class="number">3</span></div><div class="line"><span class="number">10</span>-<span class="number">08</span> <span class="number">18</span>:<span class="number">53</span>:<span class="number">31.772</span> <span class="number">24793</span>-<span class="number">24793</span>/<span class="keyword">com</span>.shenghan.haobaobei I/<span class="keyword">System</span>.<span class="keyword">out</span>: onCompleted</div></pre></td></tr></table></figure>
+<p><strong>结论：</strong></p>
+<p><strong> 1.只有每个observable都依次产品一轮数据时，才会统一发射一次，当不会有完整一轮数据时，视为完成</strong></p>
+<p>从log日志来看，observable1产生的数据是与observable2一一对应的，也就是只有observable1与observable2同时产生数据时才会统一发射一次~</p>
+<p><strong> 2.当不满足所有observable都有数据可产品时，视为完成状态</strong></p>
+<p>从log日志来看，observable2最后一项数据“Jordan - 4”并没有打印，原因是observable1并没有数据可以产生了，所以不满足发射条件，视为完成状态~</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>组合类操作符，就简单介绍到这里，希望能够对同学有所帮助，谢谢~</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/20/RxJava进阶三（过滤类操作符）/" rel="next" title="RxJava进阶三（过滤类操作符）">
+                <i class="fa fa-chevron-left"></i> RxJava进阶三（过滤类操作符）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/24/RxRetrofit 网络框架解析/" rel="prev" title="RxRetrofit 网络框架解析">
+                RxRetrofit 网络框架解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/7/A/C/1_walid1992.jpg"
+               alt="walid" />
+          <p class="site-author-name" itemprop="name">walid</p>
+           
+              <p class="site-description motion-element" itemprop="description">Walid's Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作符总览"><span class="nav-number">2.</span> <span class="nav-text">操作符总览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体使用介绍"><span class="nav-number">3.</span> <span class="nav-text">具体使用介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Join"><span class="nav-number">3.0.1.</span> <span class="nav-text">Join</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">walid</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

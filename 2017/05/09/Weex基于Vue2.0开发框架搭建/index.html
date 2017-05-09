@@ -1,0 +1,801 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RxJava," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一个在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库~">
+<meta name="keywords" content="RxJava">
+<meta property="og:type" content="article">
+<meta property="og:title" content="weex">
+<meta property="og:url" content="https://walid1992.github.io/2017/05/09/Weex基于Vue2.0开发框架搭建/index.html">
+<meta property="og:site_name" content="Walid&#39;s Blog">
+<meta property="og:description" content="一个在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库~">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-43093e0a1cfdd5ce?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-a11114f55ceb7478.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-2c404d16e05b8f0d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-8eda0114ba0ca246.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-26182ae64ca5171a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-d1c5d7de21ce940e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-d92f0ba3f5af4372.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-120c80bc608d0471.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-95742f3b0dc964fb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2843033-55bbaf814b08c429.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320">
+<meta property="og:updated_time" content="2017-05-09T03:58:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="weex">
+<meta name="twitter:description" content="一个在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库~">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2843033-43093e0a1cfdd5ce?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://walid1992.github.io/2017/05/09/Weex基于Vue2.0开发框架搭建/"/>
+
+
+
+
+
+  <title>weex | Walid's Blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Walid's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Luck oriented programming</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://walid1992.github.io/2017/05/09/Weex基于Vue2.0开发框架搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="walid">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://avatar.csdn.net/7/A/C/1_walid1992.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Walid's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">weex</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-09T11:57:17+08:00">
+                2017-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  一个在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库~
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://upload-images.jianshu.io/upload_images/2843033-43093e0a1cfdd5ce?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Weex基于Vue2.0开发框架搭建"></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近有一些人反馈说在面试过程中常常被问到weex相关的知识，也侧面反映的weex的发展还是很可观的，可是目前weex的开发者大多数是中小型公司或者个人，大公司屈指可数，揪其原因可能是基于weex的开发正确的姿势大家并没有找到，而且市面上的好多轮子还是.we后缀的，众所周知，weex和vue一直在努力的进行生态互通，而且weex实现web标准化是早晚的问题，今天和大家分享一下weex基于vue2.0的开发框架模板~</p>
+<h1 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h1><p>先简单熟悉一下weex的工作原理，这里引用一下weex官网上的一直图片，<a href="https://weex.apache.org/cn/guide/intro/how-it-works.html" target="_blank" rel="external">详细信息见官网</a></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2843033-a11114f55ceb7478.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640" alt="Weex工作原理"></p>
+<h1 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h1><h2 id="weex-开发环境搭建"><a href="#weex-开发环境搭建" class="headerlink" title="weex 开发环境搭建"></a>weex 开发环境搭建</h2><p><a href="https://weex.apache.org/cn/guide/set-up-env.html" target="_blank" rel="external">关于weex开发环境搭建问题见官方文档</a></p>
+<h2 id="android-、iOS-开发环境"><a href="#android-、iOS-开发环境" class="headerlink" title="android 、iOS 开发环境"></a>android 、iOS 开发环境</h2><p><a href="https://weex.apache.org/cn/guide/integrate-to-your-app.html" target="_blank" rel="external">关于native开发环境搭建问题见官方文档</a></p>
+<h1 id="框架说明"><a href="#框架说明" class="headerlink" title="框架说明"></a>框架说明</h1><h2 id="基于vue2-0搭建"><a href="#基于vue2-0搭建" class="headerlink" title="基于vue2.0搭建"></a>基于vue2.0搭建</h2><p>像前面说的那样weex和vue一直在努力的进行生态互通，而且weex实现web标准化是早晚的问题，所以也建议开发者不要在用.we做后缀来开发了</p>
+<h2 id="native端多页模式、web端采用单页模式"><a href="#native端多页模式、web端采用单页模式" class="headerlink" title="native端多页模式、web端采用单页模式"></a>native端多页模式、web端采用单页模式</h2><ul>
+<li>单页形态对于原生可能体验不够好，所以android与ios端采用多页模式</li>
+<li>web端沿用spa模式标准</li>
+</ul>
+<h2 id="集成三端（android、ios、h5平台）"><a href="#集成三端（android、ios、h5平台）" class="headerlink" title="集成三端（android、ios、h5平台）"></a>集成三端（android、ios、h5平台）</h2><p>关于android、ios、h5平台的集成与打包问题，在项目中都以解决~</p>
+<h2 id="集成eslint代码检查"><a href="#集成eslint代码检查" class="headerlink" title="集成eslint代码检查"></a>集成eslint代码检查</h2><p>代码检查是必要的操作，为了能够拥有vue开发的体验，将eslint集成进来~</p>
+<h2 id="提供开源组件库OSC"><a href="#提供开源组件库OSC" class="headerlink" title="提供开源组件库OSC"></a>提供开源组件库OSC</h2><p>weex-frame提供了，开源组件库OSC，降低开发者入门门槛~</p>
+<p><strong>注：</strong></p>
+<p>由于weexpack暂不支持vue问题，打包相关后续会集成进来~</p>
+<h1 id="框架介绍"><a href="#框架介绍" class="headerlink" title="框架介绍"></a>框架介绍</h1><h2 id="package-json依赖"><a href="#package-json依赖" class="headerlink" title="package.json依赖"></a>package.json依赖</h2><figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="string">"dependencies"</span>: &#123;</div><div class="line">    <span class="string">"vue"</span>: <span class="string">"^2.1.8"</span>,</div><div class="line">    <span class="string">"vue-router"</span>: <span class="string">"^2.1.1"</span>,</div><div class="line">    <span class="string">"vuex"</span>: <span class="string">"^2.1.1"</span>,</div><div class="line">    <span class="string">"vuex-router-sync"</span>: <span class="string">"^4.0.1"</span>,</div><div class="line">    <span class="string">"weex-vue-render"</span>: <span class="string">"^0.1.4"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="string">"devDependencies"</span>: &#123;</div><div class="line">    <span class="string">"babel-core"</span>: <span class="string">"^6.20.0"</span>,</div><div class="line">    <span class="string">"babel-eslint"</span>: <span class="string">"^7.1.1"</span>,</div><div class="line">    <span class="string">"babel-loader"</span>: <span class="string">"^6.2.9"</span>,</div><div class="line">    <span class="string">"babel-preset-es2015"</span>: <span class="string">"^6.18.0"</span>,</div><div class="line">    <span class="string">"css-loader"</span>: <span class="string">"^0.26.1"</span>,</div><div class="line">    <span class="string">"eslint"</span>: <span class="string">"^3.15.0"</span>,</div><div class="line">    <span class="string">"eslint-config-standard"</span>: <span class="string">"^6.2.1"</span>,</div><div class="line">    <span class="string">"eslint-loader"</span>: <span class="string">"^1.6.1"</span>,</div><div class="line">    <span class="string">"eslint-plugin-html"</span>: <span class="string">"^2.0.1"</span>,</div><div class="line">    <span class="string">"eslint-plugin-promise"</span>: <span class="string">"^3.4.2"</span>,</div><div class="line">    <span class="string">"eslint-plugin-standard"</span>: <span class="string">"^2.0.1"</span>,</div><div class="line">    <span class="string">"postcss-cssnext"</span>: <span class="string">"^2.9.0"</span>,</div><div class="line">    <span class="string">"serve"</span>: <span class="string">"^1.4.0"</span>,</div><div class="line">    <span class="string">"vue-loader"</span>: <span class="string">"^10.0.2"</span>,</div><div class="line">    <span class="string">"vue-template-compiler"</span>: <span class="string">"^2.1.8"</span>,</div><div class="line">    <span class="string">"webpack"</span>: <span class="string">"^1.14.0"</span>,</div><div class="line">    <span class="string">"weex-devtool"</span>: <span class="string">"^0.2.64"</span>,</div><div class="line">    <span class="string">"weex-loader"</span>: <span class="string">"^0.4.1"</span>,</div><div class="line">    <span class="string">"weex-vue-loader"</span>: <span class="string">"^0.2.5"</span></div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="打包配置"><a href="#打包配置" class="headerlink" title="打包配置"></a>打包配置</h2><p>1、 遍历.vue文件后缀，生成相应的entry.js文件</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getEntryFileData</span> </span>(entryPath, vueFilePath) &#123;</div><div class="line">  const relativePath = path.relative(path.join(entryPath, <span class="string">'../'</span>), vueFilePath);</div><div class="line">  <span class="keyword">return</span> <span class="string">'let App = require("<span class="subst">$&#123;relativePath&#125;</span>")</span></div><div class="line">          // 全局注册组件</div><div class="line">          Vue.component('root<span class="string">', require("components/root"))</span></div><div class="line">          App.el = '<span class="meta">#root'</span></div><div class="line">          <span class="keyword">new</span> <span class="type">Vue</span>(App)<span class="string">'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">...</div></pre></td></tr></table></figure>
+<p>2、通过weex-loader打包生成native jsbundle<br>3、 通过weex-vue-loader打包生成web jsbundle</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"></div><div class="line">const webConfig = getBaseConfig()</div><div class="line">webConfig<span class="selector-class">.entry</span> = &#123;</div><div class="line">  entry: path.resolve(<span class="string">'./src/entry.js'</span>)</div><div class="line">&#125;</div><div class="line">webConfig<span class="selector-class">.output</span> = &#123;</div><div class="line">  path: <span class="string">'dist/web'</span>,</div><div class="line">  filename: <span class="string">'[name].js'</span></div><div class="line">&#125;</div><div class="line">webConfig<span class="selector-class">.module</span><span class="selector-class">.loaders</span>[<span class="number">1</span>]<span class="selector-class">.loaders</span><span class="selector-class">.push</span>(<span class="string">'vue'</span>)</div><div class="line"></div><div class="line">const weexConfig = getBaseConfig()</div><div class="line">weexConfig<span class="selector-class">.output</span><span class="selector-class">.filename</span> = <span class="string">'weex/[name].js'</span></div><div class="line">weexConfig<span class="selector-class">.module</span><span class="selector-class">.loaders</span>[<span class="number">1</span>]<span class="selector-class">.loaders</span><span class="selector-class">.push</span>(<span class="string">'weex'</span>)</div></pre></td></tr></table></figure>
+<h1 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h1><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">weex-frame</div><div class="line">├── <span class="keyword">android </span>(<span class="keyword">android项目)</span></div><div class="line">│</div><div class="line">├── ios （ios项目代码）</div><div class="line">│</div><div class="line">├── src （weex模块）</div><div class="line">│      ├── api (api模块)</div><div class="line">│      ├── components（组件模块）</div><div class="line">│      ├── constants（常量配置）</div><div class="line">│      ├── utils （工具模块）</div><div class="line">│      └── views（视图模块）</div><div class="line">│</div><div class="line">└── <span class="keyword">dist </span>（<span class="keyword">build输出模块）</span></div><div class="line">       ├── weex (native使用<span class="keyword">jsbundle)</span></div><div class="line">       └── web（web使用<span class="keyword">jsbundle）</span></div></pre></td></tr></table></figure>
+<h2 id="组件库介绍"><a href="#组件库介绍" class="headerlink" title="组件库介绍"></a>组件库介绍</h2><h3 id="osc-navbar"><a href="#osc-navbar" class="headerlink" title="osc-navbar"></a>osc-navbar</h3><blockquote>
+<p>三端导航条</p>
+</blockquote>
+<h3 id="osc-navpage"><a href="#osc-navpage" class="headerlink" title="osc-navpage"></a>osc-navpage</h3><blockquote>
+<p>三端导航页，适配iOS顶部20px问题</p>
+</blockquote>
+<p><strong>代码示例：</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;osc-navpage</div><div class="line">    :title=<span class="string">"title"</span></div><div class="line">    leftItemSrc=<span class="string">"https://gitlab.com/toonteam/weex/raw/ce656f79084ed9db357f8abd76c6e6c82dc5a28d/src/views/person-info/imgs/back.png"</span></div><div class="line">    rightItemSrc=<span class="string">"http://gtms02.alicdn.com/tps/i2/TB1ED7iMpXXXXXEXXXXWA_BHXXX-48-48.png"</span></div><div class="line">    <span class="meta">@naviBarLeftItemClick</span>=<span class="string">"onBack"</span></div><div class="line">    <span class="meta">@naviBarRightItemClick</span>=<span class="string">"onReload"</span>&gt;</div><div class="line">  &lt;web <span class="class"><span class="keyword">class</span></span>=<span class="symbol">'we</span>b' ref=<span class="symbol">'webvie</span>w' :src=<span class="symbol">'ur</span>l' <span class="meta">@pagestart</span>=<span class="symbol">'star</span>t' <span class="meta">@pagefinish</span>=<span class="symbol">'finis</span>h'&gt;&lt;/web&gt;</div><div class="line">&lt;/osc-navpage&gt;</div></pre></td></tr></table></figure>
+<h3 id="osc-root详细示例"><a href="#osc-root详细示例" class="headerlink" title="osc-root详细示例"></a><a href="/doc/components/osc-root.md">osc-root详细示例</a></h3><blockquote>
+<p>界面根view，适配iOS顶部20px问题</p>
+</blockquote>
+<p>代码示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">osc-root</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">text</span>&gt;</span>OsMartian Root<span class="tag">&lt;/<span class="name">text</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">osc-root</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="osc-tabbar"><a href="#osc-tabbar" class="headerlink" title="osc-tabbar"></a>osc-tabbar</h3><blockquote>
+<p>底部tabbar</p>
+</blockquote>
+<p><strong>代码示例：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">osc-tabbar</span> <span class="attr">:tabItems</span>=<span class="string">"tabItems"</span> @<span class="attr">tabBarOnClick</span>=<span class="string">"tabBarOnClick"</span>&gt;</span><span class="tag">&lt;/<span class="name">osc-tabbar</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="osc-tabitem"><a href="#osc-tabitem" class="headerlink" title="osc-tabitem"></a>osc-tabitem</h3><blockquote>
+<p>底部tabbaritem元素</p>
+</blockquote>
+<h2 id="项目启动"><a href="#项目启动" class="headerlink" title="项目启动"></a>项目启动</h2><ol>
+<li>git clone git@github.com:osmartian/weex-frame.git</li>
+<li>cd weex-frame</li>
+<li>npm install</li>
+<li>执行 ./start</li>
+</ol>
+<h3 id="android-启动"><a href="#android-启动" class="headerlink" title="android 启动"></a>android 启动</h3><ol>
+<li>打开andorid studio</li>
+<li>File -&gt; New -&gt; Import Project -&gt; weex-frame/android -&gt; 启动</li>
+</ol>
+<p>或</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm <span class="keyword">run</span><span class="bash"> dev:android</span></div></pre></td></tr></table></figure>
+<h3 id="iOS-启动"><a href="#iOS-启动" class="headerlink" title="iOS 启动"></a>iOS 启动</h3><ol>
+<li>cd ios</li>
+<li>pod install (未安装pod，请先安装)</li>
+<li>open WeexFrame.xcworkspace</li>
+</ol>
+<h3 id="h5-启动方式"><a href="#h5-启动方式" class="headerlink" title="h5 启动方式"></a>h5 启动方式</h3><p> 打开 <a href="http://localhost:12580/weex.html" target="_blank" rel="external">http://localhost:12580/weex.html</a></p>
+<h2 id="项目示例"><a href="#项目示例" class="headerlink" title="项目示例"></a>项目示例</h2><h3 id="h5-端示例"><a href="#h5-端示例" class="headerlink" title="h5 端示例"></a>h5 端示例</h3><p><img src="http://upload-images.jianshu.io/upload_images/2843033-2c404d16e05b8f0d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="h5我的页面"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2843033-8eda0114ba0ca246.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="h5发起页面"></p>
+<h3 id="android-端示例"><a href="#android-端示例" class="headerlink" title="android 端示例"></a>android 端示例</h3><p><img src="http://upload-images.jianshu.io/upload_images/2843033-26182ae64ca5171a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="android首页"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2843033-d1c5d7de21ce940e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="android我的页面"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2843033-d92f0ba3f5af4372.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="android发起页面"></p>
+<h3 id="iOS-端示例"><a href="#iOS-端示例" class="headerlink" title="iOS 端示例"></a>iOS 端示例</h3><p><img src="http://upload-images.jianshu.io/upload_images/2843033-120c80bc608d0471.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="iOS首页"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2843033-95742f3b0dc964fb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="iOS我的页面"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2843033-55bbaf814b08c429.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/320" alt="iOS发起页面"></p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>能看的出来上方的三端示例表现还是很一致的，本篇博文也是想给大家提供一个轮子，也欢迎大家多多提意见，共同促进weex生态成熟~</p>
+<p>框架项目地址：</p>
+<p><a href="https://github.com/SyswinAE/weex-frame" target="_blank" rel="external">https://github.com/SyswinAE/weex-frame</a></p>
+<p>本文已在版权印备案，如需转载请访问版权印。53688340</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/24/RxRetrofit 网络框架解析/" rel="next" title="RxRetrofit 网络框架解析">
+                <i class="fa fa-chevron-left"></i> RxRetrofit 网络框架解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://avatar.csdn.net/7/A/C/1_walid1992.jpg"
+               alt="walid" />
+          <p class="site-author-name" itemprop="name">walid</p>
+           
+              <p class="site-description motion-element" itemprop="description">Walid's Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工作原理"><span class="nav-number">2.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发环境搭建"><span class="nav-number">3.</span> <span class="nav-text">开发环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#weex-开发环境搭建"><span class="nav-number">3.1.</span> <span class="nav-text">weex 开发环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android-、iOS-开发环境"><span class="nav-number">3.2.</span> <span class="nav-text">android 、iOS 开发环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#框架说明"><span class="nav-number">4.</span> <span class="nav-text">框架说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于vue2-0搭建"><span class="nav-number">4.1.</span> <span class="nav-text">基于vue2.0搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#native端多页模式、web端采用单页模式"><span class="nav-number">4.2.</span> <span class="nav-text">native端多页模式、web端采用单页模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集成三端（android、ios、h5平台）"><span class="nav-number">4.3.</span> <span class="nav-text">集成三端（android、ios、h5平台）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集成eslint代码检查"><span class="nav-number">4.4.</span> <span class="nav-text">集成eslint代码检查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提供开源组件库OSC"><span class="nav-number">4.5.</span> <span class="nav-text">提供开源组件库OSC</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#框架介绍"><span class="nav-number">5.</span> <span class="nav-text">框架介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#package-json依赖"><span class="nav-number">5.1.</span> <span class="nav-text">package.json依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包配置"><span class="nav-number">5.2.</span> <span class="nav-text">打包配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目结构"><span class="nav-number">6.</span> <span class="nav-text">项目结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#组件库介绍"><span class="nav-number">6.1.</span> <span class="nav-text">组件库介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#osc-navbar"><span class="nav-number">6.1.1.</span> <span class="nav-text">osc-navbar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#osc-navpage"><span class="nav-number">6.1.2.</span> <span class="nav-text">osc-navpage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#osc-root详细示例"><span class="nav-number">6.1.3.</span> <span class="nav-text">osc-root详细示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#osc-tabbar"><span class="nav-number">6.1.4.</span> <span class="nav-text">osc-tabbar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#osc-tabitem"><span class="nav-number">6.1.5.</span> <span class="nav-text">osc-tabitem</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目启动"><span class="nav-number">6.2.</span> <span class="nav-text">项目启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#android-启动"><span class="nav-number">6.2.1.</span> <span class="nav-text">android 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iOS-启动"><span class="nav-number">6.2.2.</span> <span class="nav-text">iOS 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#h5-启动方式"><span class="nav-number">6.2.3.</span> <span class="nav-text">h5 启动方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目示例"><span class="nav-number">6.3.</span> <span class="nav-text">项目示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#h5-端示例"><span class="nav-number">6.3.1.</span> <span class="nav-text">h5 端示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-端示例"><span class="nav-number">6.3.2.</span> <span class="nav-text">android 端示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iOS-端示例"><span class="nav-number">6.3.3.</span> <span class="nav-text">iOS 端示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">7.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">walid</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
