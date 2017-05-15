@@ -4,6 +4,150 @@
   
     
     <entry>
+      <title><![CDATA[web端渲染优化方案]]></title>
+      <url>https://walid1992.github.io/2017/05/15/web%E7%AB%AF%E6%B8%B2%E6%9F%93%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/</url>
+      <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>web端近年来发展十分迅速，网页在 native app 中的占比也不断增加，但H5应用的渲染方式，刷新方式与 native 应用有很大的区别。带来的问题是用户会感觉刷新慢，易卡顿，体验差，本篇博文主要针对渲染速度问题进行优化~</p>
+<h1 id="渲染原理"><a href="#渲染原理" class="headerlink" title="渲染原理"></a>渲染原理</h1><p><img src="http://upload-images.jianshu.io/upload_images/2843033-08a8aac625335380.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640" alt="渲染原理图"></p>
+<p>从上图可知web界面的渲染原理，这样我们就可以针对此进行优化了，先强调一下html的加载原理，我们常说的”加载是并行的，执行是串行的“的结果。html开始加载的时候，浏览器会将页面外联的css文件和js文件并行加载，如果一个文件还没回来，它后面的代码是不会执行的。</p>
+<h1 id="优化渲染速度"><a href="#优化渲染速度" class="headerlink" title="优化渲染速度"></a>优化渲染速度</h1><p><strong>大概从如下几个方面进行优化：</strong></p>
+<ol>
+<li>采用SPA开发模式</li>
+<li>采用 Virtual DOM 进行界面更新优化</li>
+<li>服务端渲染</li>
+<li>首屏渲染速度优化</li>
+<li>懒加载</li>
+<li>预加载</li>
+<li>资源压缩</li>
+<li>开发规范</li>
+</ol>
+<h2 id="SPA开发模式"><a href="#SPA开发模式" class="headerlink" title="SPA开发模式"></a>SPA开发模式</h2><p>由于传统多页模式开发，界面切换造成了频繁的网络请求，导致界面渲染效率十分低下，来自Alexander Aghassipour和Shajith Chacko发表的这篇<a href="http://techcrunch.com/2012/11/30/why-enterprise-apps-are-moving-to-single-page-design/" target="_blank" rel="external">文章</a>讲述了单页应用程序是如何创建而来的。<br>单页面应用是指用户通过浏览器加载独立的HTML页面并且无需离开此导航页面，这也是其独特的优势所在。对用户操作来说，一旦加载和执行单个页面应用程序通常会有更多的响应，这就需要返回到后端Web服务器，而单页面应用为用户提供了更接近一个本地移动或桌面应用程序的体验。</p>
+<p><strong>单页Web应用程序的优点：</strong></p>
+<p>首先，最大的好处是用户体验，对于内容的改动不需要加载整个页面。这样做好处颇多，因为数据层和UI的分离，可以重新编写一个原生的移动设备应用程序而不用（对原有数据服务部分）大动干戈。<br>单页面Web应用层程序最根本的优点是高效。它对服务器压力很小，消耗更少的带宽，能够与面向服务的架构更好地结合。</p>
+<p><strong>单页Web应用程序的缺点：</strong></p>
+<p>虽然还有一些历史遗留问题（大部分是针对HTML5的改进）以及SEO。如果你看中SEO，那就不应该在页面上使用JavaScript，你应该使用网站而不是Web应用。目前该技术还存在一些争议，但这并不是重点，因为这种类型的体系架构为SAAS Web Apps提供了一个极大的可用性。</p>
+<p>单页Web应用程序的结构很简单：首先传递HTML文档框架；然后使用JavaScript修改页面；紧接着再从服务器传递更多数据然后再修改页面，如此循环。从性能的角度看，在现代浏览器中单页面Web App已经能够和普通应用程序相媲美，而且几乎所有的操作系统都支持现代的浏览器。使用HTML+CSS+Javascript编写应用程序，能使更多的人们都加入到程序开发的行列。</p>
+<p>在单页开发框架中，我建议使用vue 2，下图是一些关于界面渲染相关的数据对比：</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th style="text-align:right">Vue 2（单位/s）</th>
+<th style="text-align:right">React 15（单位/s）</th>
+<th style="text-align:right">Angular 2（单位/s）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>create rows Duration for creating 1000 rows after the page loaded.</td>
+<td style="text-align:right">171.36</td>
+<td style="text-align:right">227.44</td>
+<td style="text-align:right">198.06</td>
+</tr>
+<tr>
+<td>replace all rows Duration for updating all 1000 rows of the table (with 5 warmup iterations)</td>
+<td style="text-align:right">68.76</td>
+<td style="text-align:right">211.71</td>
+<td style="text-align:right">178.45</td>
+</tr>
+<tr>
+<td>remove row Duration to remove a row. (with 5 warmup iterations).</td>
+<td style="text-align:right">64.11</td>
+<td style="text-align:right">49.42</td>
+<td style="text-align:right">19.14</td>
+</tr>
+<tr>
+<td>partial update Time to update the text of every 10th row (with 5 warmup iterations)</td>
+<td style="text-align:right">22.17</td>
+<td style="text-align:right">14.77</td>
+<td style="text-align:right">11.42</td>
+</tr>
+<tr>
+<td>ready memory Memory usage after page load</td>
+<td style="text-align:right">3.43</td>
+<td style="text-align:right">4.64</td>
+<td style="text-align:right">15.45</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Virtual-DOM"><a href="#Virtual-DOM" class="headerlink" title="Virtual DOM"></a>Virtual DOM</h2><p>首先强调一下，Virtual DOM 并没有提升首屏渲染速度，而且它还延长了首屏渲染速度，但是 Virtual DOM 提升的是视图局部更新的速度，能够依靠映射关系快速查找到真正的 dom 节点。</p>
+<p><strong>在Virtual DOM方案中，更新浏览器的DOM分三个步骤：</strong></p>
+<ol>
+<li>只要数据发生改变，就会重新生成一个完整的Virtual DOM</li>
+<li>重新计算比较出新的和之前的Virtual DOM的差异</li>
+<li>更新真实DOM中真正发生改变的部分，就像是给DOM打了个补丁</li>
+</ol>
+<h2 id="服务端渲染"><a href="#服务端渲染" class="headerlink" title="服务端渲染"></a>服务端渲染</h2><p>稍后补全~</p>
+<h2 id="首屏渲染速度优化"><a href="#首屏渲染速度优化" class="headerlink" title="首屏渲染速度优化"></a>首屏渲染速度优化</h2><p>做移动web页面，受移动网络网速和终端性能影响，我们经常要关注首屏内容展示时间（以下简称首屏时间）这个指标，它衡量着我们的页面是否能在用户耐心消磨完之前展示出来，很大程度影响着用户的使用满意度。</p>
+<p><strong>方案：</strong></p>
+<ol>
+<li>三秒种渲染完成首屏指标</li>
+<li>首屏加载3秒完成或使用Loading</li>
+<li>基于联通3G网络平均338KB/s(2.71Mb/s)，所以首屏资源不应超过1014KB</li>
+<li>所有影响首屏加载和渲染的代码应在处理逻辑中后置</li>
+</ol>
+<h2 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h2><p>将不影响首屏的资源和当前屏幕资源不用的资源放到用户需要时才加载，可以大大提升重要资源的显示速度和降低总体流量<br>PS：按需加载会导致大量重绘，影响渲染性能</p>
+<ol>
+<li>LazyLoad</li>
+<li>滚屏加载</li>
+<li>通过Media Query加载</li>
+</ol>
+<h2 id="预加载"><a href="#预加载" class="headerlink" title="预加载"></a>预加载</h2><p>大型重资源页面（如游戏）可使用增加Loading的方法，资源加载完成后再显示页面。但Loading时间过长，会造成用户流失<br>对用户行为分析，可以在当前页加载下一页资源，提升速度</p>
+<ol>
+<li>可感知Loading(如进入空间游戏的Loading)</li>
+<li>不可感知的Loading（如提前加载下一页）</li>
+</ol>
+<h2 id="资源压缩"><a href="#资源压缩" class="headerlink" title="资源压缩"></a>资源压缩</h2><p>减少资源大小可以加快网页显示速度，所以要对HTML、CSS、JavaScript等进行代码压缩，并在服务器端设置GZip</p>
+<ol>
+<li>压缩（例如，多余的空格、换行符和缩进）</li>
+<li>启用GZip</li>
+<li>控制图片质量（使用<a href="https://tinypng.com/" target="_blank" rel="external"> tinypng </a>进行压缩）</li>
+</ol>
+<h2 id="开发建议"><a href="#开发建议" class="headerlink" title="开发建议"></a>开发建议</h2><h3 id="html注意事项"><a href="#html注意事项" class="headerlink" title="html注意事项"></a>html注意事项</h3><p><strong>加载是并行的:</strong></p>
+<ol>
+<li>别再把 JsEndTime – JsStartTime 的结果成为js文件的加载执行时间（除非你没有外联css文件），不然会被内行人取笑滴；</li>
+<li>css文件的阻塞会影响后面js代码的执行，自然也包括html代码的执行，即是说此时你的页面就是空白的。所以css文件尽量内联，你可以让构建工具帮你忙；</li>
+</ol>
+<p><strong>执行是串行的:</strong></p>
+<ol>
+<li>无关紧要”的js不要放在负责渲染的js前面，这里的“无关紧要”是指和首屏渲染无关，如数据上报组件。我们可以选择将要上报的数据临时存起来，先继续执行渲染的js，等负责渲染的js执行完再加载上报组件再上报。甚至连zepto之类的库我们也可以放后面，把渲染相关的代码抽离出来并用原生js书写，放到最前面</li>
+<li>可以看到，动态加载的js的执行是不会受到html后面外联的js的阻塞的影响，即是说，它的执行和后面js的执行顺序是不确定的。因此我们要小心处理好文件的依赖关系。当然还可以采用最不容易出错的方法：负责动态加载js的文件是html里面外联的最后一个文件</li>
+</ol>
+<h3 id="html使用Viewport"><a href="#html使用Viewport" class="headerlink" title="html使用Viewport"></a>html使用Viewport</h3><p>Viewport可以加速页面的渲染，请使用以下代码</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;meta <span class="built_in">name</span>=<span class="string">"viewport"</span> content=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</div></pre></td></tr></table></figure>
+<h3 id="减少Dom节点"><a href="#减少Dom节点" class="headerlink" title="减少Dom节点"></a>减少Dom节点</h3><p>Dom节点太多影响页面的渲染，应尽量减少Dom节点</p>
+<h3 id="减少HTTP请求"><a href="#减少HTTP请求" class="headerlink" title="减少HTTP请求"></a>减少HTTP请求</h3><p>因为手机浏览器同时响应请求为4个请求（Android支持4个，iOS 5后可支持6个），所以要尽量减少页面的请求数，首次加载同时请求数不能超过4个</p>
+<ol>
+<li>合并CSS、JavaScript</li>
+<li>合并小图片，使用雪碧图</li>
+</ol>
+<h3 id="无阻塞"><a href="#无阻塞" class="headerlink" title="无阻塞"></a>无阻塞</h3><p>写在HTML头部的JavaScript（无异步），和写在HTML标签中的Style会阻塞页面的渲染，因此CSS放在页面头部并使用Link方式引入，避免在HTML标签中写Style，JavaScript放在页面尾部或使用异步方式加载</p>
+<h3 id="减少Cookie"><a href="#减少Cookie" class="headerlink" title="减少Cookie"></a>减少Cookie</h3><p>Cookie会影响加载速度，所以静态资源域名不使用Cookie</p>
+<h3 id="避免重定向"><a href="#避免重定向" class="headerlink" title="避免重定向"></a>避免重定向</h3><p>重定向会影响加载速度，所以在服务器正确设置避免重定向</p>
+<h3 id="异步加载第三方资源"><a href="#异步加载第三方资源" class="headerlink" title="异步加载第三方资源"></a>异步加载第三方资源</h3><p>第三方资源不可控会影响页面的加载和显示，因此要异步加载第三方资源</p>
+<h3 id="脚本执行优化"><a href="#脚本执行优化" class="headerlink" title="脚本执行优化"></a>脚本执行优化</h3><ol>
+<li>CSS写在头部，JavaScript写在尾部或异步</li>
+<li>避免图片和iFrame等的空Src（空Src会重新加载当前页面，影响速度和效率）</li>
+<li>尽量避免重设图片大小（重设图片大小是指在页面、CSS、JavaScript等中多次重置图片大小，多次重设图片大小会引发图片的多次重绘，影响性能）</li>
+<li>图片尽量避免使用DataURL（DataURL图片没有使用图片的压缩算法文件会变大，并且要解码后再渲染，加载慢耗时长）</li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> Web </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> Web 性能优化 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Weex基于Vue2.0开发框架搭建]]></title>
       <url>https://walid1992.github.io/2017/05/09/Weex%E5%9F%BA%E4%BA%8EVue2.0%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA/</url>
       <content type="html"><![CDATA[<p><img src="http://upload-images.jianshu.io/upload_images/2843033-43093e0a1cfdd5ce?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Weex基于Vue2.0开发框架搭建"></p>
