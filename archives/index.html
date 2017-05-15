@@ -987,12 +987,12 @@ function showTime(Counter) {
 		query.find({
 			success: function(results) {
 				if (results.length == 0) {
-					var content = $(document.getElementById(url)).text() + ': 0';
+				  var content = '阅读次数: 0';
 					$(document.getElementById(url)).text(content);
 				}
 			  for (var i = 0; i < results.length; i++) {
 					var object = results[i];
-					var content = $(document.getElementById(url)).text() + ': ' + object.get('time');
+					var content = '阅读次数' + ': ' + object.get('time');
 				  $(document.getElementById(url)).text(content);
 				}
 			},
